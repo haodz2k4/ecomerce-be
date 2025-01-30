@@ -5,13 +5,13 @@ import { PaginatedResDto } from "../dto/paginated-res.dto";
  */
 export interface IRepository<R> {
 
-    create(data: unknown): Promise<R>;
+    create(createDto: unknown): Promise<R>;
 
-    getMany(data?: unknown): Promise<PaginatedResDto<R>>;
+    getMany(queryDto?: unknown): Promise<PaginatedResDto<R>>;
 
     getOneById(id: unknown): Promise<R>;
 
-    update(id: unknown, data: unknown): Promise<R>;
+    update(id: unknown, updateDto: unknown): Promise<R>;
 
     remove(id: unknown): Promise<void>;
 }
