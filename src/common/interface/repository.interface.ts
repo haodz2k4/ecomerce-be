@@ -1,10 +1,17 @@
+import { PaginatedResDto } from "../dto/paginated-res.dto";
 
+/**
+ * R = Response Dto
+ */
+export interface IRepository<R> {
 
-export interface IRepository {
+    create(data: unknown): Promise<R>;
 
-    create(data: unknown): Promise<unknown>;
-    getMany(data?: unknown): Promise<unknown>;
-    getOneById(id: unknown): Promise<unknown>;
-    update(id: unknown, data: unknown): Promise<unknown>;
+    getMany(data?: unknown): Promise<PaginatedResDto<R>>;
+
+    getOneById(id: unknown): Promise<R>;
+
+    update(id: unknown, data: unknown): Promise<R>;
+
     remove(id: unknown): Promise<void>;
 }
