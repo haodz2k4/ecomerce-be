@@ -9,6 +9,31 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  Nam
+  Nữ
+}
+
+enum Status {
+  active 
+  inactive
+}
+
+model Users {
+  id String @id @default(uuid())
+  fullName String  
+  avatar String 
+  email String @unique
+  gender Gender? 
+  status  Status @default(active) 
+  verified Boolean @default(false)
+  birthDate DateTime? 
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  deletedAt DateTime?
 }
