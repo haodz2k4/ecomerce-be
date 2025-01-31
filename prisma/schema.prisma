@@ -26,7 +26,7 @@ enum Status {
 model Users {
   id String @id @default(uuid())
   fullName String  
-  avatar String 
+  avatar String? 
   email String @unique
   password String
   gender Gender? 
