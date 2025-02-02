@@ -27,7 +27,7 @@ export class UsersService {
     return this.userRepository.update(id, updateUserDto)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string): Promise<void> {
+    return this.userRepository.remove(id)
   }
 }

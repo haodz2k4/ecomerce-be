@@ -132,7 +132,9 @@ export class UsersRepository implements IRepository<UserResDto>{
         const user = await this.prisma.users.update({where: {id}, data: updateUserDto});
         return plainToInstance(UserResDto, user);
     }
-    remove(id: unknown): Promise<void> {
-        throw new Error("Method not implemented.");
+
+    async remove(id: string): Promise<void> {
+        await this.getOneById(id);
+        await this.prisma.users.delete({where: {id}});
     }
 }
