@@ -23,8 +23,8 @@ export class UsersService {
     return this.userRepository.getOneById(id)
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  update(id: string, updateUserDto: UpdateUserDto) :Promise<UserResDto> {
+    return this.userRepository.update(id, updateUserDto)
   }
 
   remove(id: number) {

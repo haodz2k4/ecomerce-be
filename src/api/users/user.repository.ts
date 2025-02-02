@@ -8,6 +8,7 @@ import { plainToInstance } from "class-transformer";
 import { hashPassword } from "src/utils/password.util";
 import { QueryUserDto } from "./dto/query-user.dto";
 import { Pagination } from "src/utils/pagination";
+import { UpdateUserDto } from "./dto/update-user.dto";
 
 
 
@@ -26,12 +27,7 @@ export class UsersRepository implements IRepository<UserResDto>{
             status,
             birthDate 
         } = createUserDto;
-        const isExistsEmail = await this.prisma.users.findFirst({
-            where: {email}
-        })
-        if(isExistsEmail){
-            throw new BadRequestException("Email is already taken");
-        }
+        await this.checkExistsEmail(email)
         const user = await this.prisma.users.create({data: {
             fullName,
             email,
@@ -41,6 +37,15 @@ export class UsersRepository implements IRepository<UserResDto>{
             birthDate 
         }});
         return plainToInstance(UserResDto, user);
+    }
+
+    async checkExistsEmail(email: string): Promise<void> {
+        const isExistsEmail = await this.prisma.users.findFirst({
+            where: {email}
+        })
+        if(isExistsEmail){
+            throw new BadRequestException("Email is already taken");
+        }
     }
     
     async getMany(queryUserDto: QueryUserDto): Promise<PaginatedResDto<UserResDto>> {
@@ -118,8 +123,14 @@ export class UsersRepository implements IRepository<UserResDto>{
         }
         return plainToInstance(UserResDto, user);
     }
-    update(id: unknown, data: unknown): Promise<UserResDto> {
-        throw new Error("Method not implemented.");
+    async update(id: string, updateUserDto: UpdateUserDto): Promise<UserResDto> {
+        const { email } = updateUserDto;
+        if(email){
+            await this.checkExistsEmail(email);
+        }
+        
+        const user = await this.prisma.users.update({where: {id}, data: updateUserDto});
+        return plainToInstance(UserResDto, user);
     }
     remove(id: unknown): Promise<void> {
         throw new Error("Method not implemented.");
