@@ -6,6 +6,8 @@ import { PaginatedResDto } from "src/common/dto/paginated-res.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { plainToInstance } from "class-transformer";
 import { hashPassword } from "src/utils/password.util";
+import { QueryUserDto } from "./dto/query-user.dto";
+import { Pagination } from "src/utils/pagination";
 
 
 
@@ -41,8 +43,73 @@ export class UsersRepository implements IRepository<UserResDto>{
         return plainToInstance(UserResDto, user);
     }
     
-    getMany(data?: unknown): Promise<PaginatedResDto<UserResDto>> {
-        throw new Error("Method not implemented.");
+    async getMany(queryUserDto: QueryUserDto): Promise<PaginatedResDto<UserResDto>> {
+        const {
+            keyword,
+            page,
+            limit,
+            sortBy,
+            sortOrder,
+            gender,
+            status
+        } = queryUserDto;
+        const skip = queryUserDto.getSkip();
+        const filters: Record<string, unknown>[] = [];
+        
+        //KEYWORD
+        if(keyword) {
+            filters.push(
+                {
+                    fullName: {
+                        contains: keyword
+                    }
+                }
+            )
+        }
+        //GENDER
+        if(gender) {
+            filters.push(
+                {
+                    gender: {
+                        equals: gender
+                    }
+                }
+            )
+        }
+        //STATUS
+        if(status) {
+            filters.push(
+                {
+                    status: {
+                        equals: status
+                    }
+                }
+            )
+        }
+
+        const where: Record<string, unknown> = {}
+        if(filters.length > 0) {
+            where["AND"] = filters
+        }
+        const [users, total] = await Promise.all([
+            this.prisma.users.findMany({
+                where,
+                orderBy: {
+                    [sortBy]: sortOrder
+                },
+                take: limit,
+                skip
+            }),
+            this.getTotalDocument(where)
+        ])
+        
+        const pagination = new Pagination(page, limit,total);
+        return new PaginatedResDto(plainToInstance(UserResDto, users), pagination);
+    }
+
+    async getTotalDocument(where?: Record<string, unknown>): Promise<number> {
+        
+        return await this.prisma.users.count({where})
     }
     getOneById(id: unknown): Promise<UserResDto> {
         throw new Error("Method not implemented.");

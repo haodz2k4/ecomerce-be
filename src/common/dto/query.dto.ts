@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsDate, IsEnum, IsNumber, IsOptional, IsString, Min } from "class-validator";
-import { SortOrderEnum } from "src/constants/app.constant";
+import { DefaultSortBy, DefaultSortOrder, SortOrderEnum } from "src/constants/app.constant";
 import { IRange } from "../interface/app.interface";
 
 
@@ -14,21 +14,21 @@ export class QueryDto {
     @Type(() => Number)
     @Min(1)
     @IsOptional()
-    page?: number;
+    page?: number = 1;
 
     @IsNumber()
     @Type(() => Number)
     @Min(1)
     @IsOptional()
-    limit?: number;
+    limit?: number = 100;
 
     @IsString()
     @IsOptional()
-    sortBy?: string;
+    sortBy?: string = DefaultSortBy;
 
     @IsEnum(SortOrderEnum)
     @IsOptional()
-    sortOrder?: SortOrderEnum;
+    sortOrder?: SortOrderEnum = DefaultSortOrder;
 
     //Range createdAt
     @IsDate()
@@ -56,6 +56,13 @@ export class QueryDto {
         return {
             gte: this.startCreatedAt,
             lte: this.endCreatedAt
+        }
+    }
+
+    getRangeUpdatedAt(): IRange<Date> {
+        return {
+            gte: this.startUpdatedAt,
+            lte: this.endUpdatedAt
         }
     }
 

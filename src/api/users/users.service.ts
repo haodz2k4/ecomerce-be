@@ -3,6 +3,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './user.repository';
 import { UserResDto } from './dto/user-res.dto';
+import { QueryUserDto } from './dto/query-user.dto';
+import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 
 @Injectable()
 export class UsersService {
@@ -13,8 +15,8 @@ export class UsersService {
     return this.userRepository.create(createUserDto)
   }
 
-  findAll() {
-    return `This action returns all users`;
+  findAll(queryUserDto: QueryUserDto): Promise<PaginatedResDto<UserResDto>> {
+    return this.userRepository.getMany(queryUserDto);
   }
 
   findOne(id: number) {

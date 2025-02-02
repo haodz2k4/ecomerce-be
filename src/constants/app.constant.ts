@@ -5,3 +5,8 @@ export enum SortOrderEnum {
     ASC = 'asc',
     DESC = 'desc'
 }
+
+
+
+export const DefaultSortBy = 'createdAt'
+export const DefaultSortOrder = SortOrderEnum.DESC
