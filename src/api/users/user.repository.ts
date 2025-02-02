@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { IRepository } from "src/common/interface/repository.interface";
 import { UserResDto } from "./dto/user-res.dto";
@@ -111,8 +111,12 @@ export class UsersRepository implements IRepository<UserResDto>{
         
         return await this.prisma.users.count({where})
     }
-    getOneById(id: unknown): Promise<UserResDto> {
-        throw new Error("Method not implemented.");
+    async getOneById(id: unknown): Promise<UserResDto> {
+        const user = await this.prisma.users.findFirst({where: {id}});
+        if(!user) {
+            throw new NotFoundException("User is not found");
+        }
+        return plainToInstance(UserResDto, user);
     }
     update(id: unknown, data: unknown): Promise<UserResDto> {
         throw new Error("Method not implemented.");
