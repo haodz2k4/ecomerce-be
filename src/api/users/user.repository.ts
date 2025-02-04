@@ -27,7 +27,10 @@ export class UsersRepository implements IRepository<UserResDto>{
             status,
             birthDate 
         } = createUserDto;
-        await this.checkExistsEmail(email)
+        const isExists = await this.getUserByEmail(email);
+        if(!isExists) {
+            throw new BadRequestException("Email is already taken")
+        }
         const user = await this.prisma.users.create({data: {
             fullName,
             email,
@@ -39,13 +42,11 @@ export class UsersRepository implements IRepository<UserResDto>{
         return plainToInstance(UserResDto, user);
     }
 
-    async checkExistsEmail(email: string): Promise<void> {
-        const isExistsEmail = await this.prisma.users.findFirst({
+    async getUserByEmail(email: string): Promise<UserResDto> {
+        const user = await this.prisma.client.users.findFirst({
             where: {email}
         })
-        if(isExistsEmail){
-            throw new BadRequestException("Email is already taken");
-        }
+        return plainToInstance(UserResDto,user)
     }
     
     async getMany(queryUserDto: QueryUserDto): Promise<PaginatedResDto<UserResDto>> {
@@ -97,7 +98,7 @@ export class UsersRepository implements IRepository<UserResDto>{
             where["AND"] = filters
         }
         const [users, total] = await Promise.all([
-            this.prisma.users.findMany({
+            this.prisma.client.users.findMany({
                 where,
                 orderBy: {
                     [sortBy]: sortOrder
@@ -116,25 +117,23 @@ export class UsersRepository implements IRepository<UserResDto>{
         
         return await this.prisma.users.count({where})
     }
+
     async getOneById(id: unknown): Promise<UserResDto> {
-        const user = await this.prisma.users.findFirst({where: {id}});
+        const user = await this.prisma.client.users.findFirst({where: {id}});
         if(!user) {
             throw new NotFoundException("User is not found");
         }
         return plainToInstance(UserResDto, user);
     }
+
     async update(id: string, updateUserDto: UpdateUserDto): Promise<UserResDto> {
-        const { email } = updateUserDto;
-        if(email){
-            await this.checkExistsEmail(email);
-        }
-        
-        const user = await this.prisma.users.update({where: {id}, data: updateUserDto});
+        await this.getOneById(id)
+        const user = await this.prisma.client.users.update({where: {id}, data: updateUserDto});
         return plainToInstance(UserResDto, user);
     }
 
     async remove(id: string): Promise<void> {
         await this.getOneById(id);
-        await this.prisma.users.delete({where: {id}});
+        await this.prisma.client.users.delete({id});
     }
 }
