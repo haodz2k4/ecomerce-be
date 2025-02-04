@@ -23,6 +23,10 @@ export class UsersService {
     return this.userRepository.getOneById(id)
   }
 
+  getUserByEmail(email: string): Promise<UserResDto> {
+    return this.userRepository.getUserByEmail(email);
+  }
+
   update(id: string, updateUserDto: UpdateUserDto) :Promise<UserResDto> {
     return this.userRepository.update(id, updateUserDto)
   }
