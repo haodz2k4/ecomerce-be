@@ -1,10 +1,10 @@
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import { JwtTypeEnum } from "src/constants/jwt.constant";
+import { StrategyName } from "src/constants/strategy.constant";
 
 
-export class JwtRefreshStrategy extends PassportStrategy(Strategy, JwtTypeEnum.REFRESH) {
+export class JwtRefreshStrategy extends PassportStrategy(Strategy, StrategyName.JWT_REFRESH) {
 
     constructor(private configService: ConfigService) {
         super({

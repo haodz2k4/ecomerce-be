@@ -9,6 +9,7 @@ import { hashPassword } from "src/utils/password.util";
 import { QueryUserDto } from "./dto/query-user.dto";
 import { Pagination } from "src/utils/pagination";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { Users } from "@prisma/client";
 
 
 
@@ -42,11 +43,10 @@ export class UsersRepository implements IRepository<UserResDto>{
         return plainToInstance(UserResDto, user);
     }
 
-    async getUserByEmail(email: string): Promise<UserResDto> {
-        const user = await this.prisma.client.users.findFirst({
+    async getUserByEmail(email: string): Promise<Users> {
+        return await this.prisma.client.users.findFirst({
             where: {email}
         })
-        return plainToInstance(UserResDto,user)
     }
     
     async getMany(queryUserDto: QueryUserDto): Promise<PaginatedResDto<UserResDto>> {

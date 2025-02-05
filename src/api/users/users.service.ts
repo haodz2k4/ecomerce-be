@@ -5,6 +5,7 @@ import { UsersRepository } from './user.repository';
 import { UserResDto } from './dto/user-res.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
+import { Users } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -23,7 +24,7 @@ export class UsersService {
     return this.userRepository.getOneById(id)
   }
 
-  getUserByEmail(email: string): Promise<UserResDto> {
+  getUserByEmail(email: string): Promise<Users> {
     return this.userRepository.getUserByEmail(email);
   }
 

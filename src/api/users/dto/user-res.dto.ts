@@ -1,6 +1,5 @@
 import { Exclude, Expose } from "class-transformer";
 import { UserGenderEnum, UserStatusEnum } from "src/constants/entity.constant";
-import { verifyPassword } from "src/utils/password.util";
 
 @Exclude()
 export class UserResDto {
@@ -37,8 +36,4 @@ export class UserResDto {
 
     @Expose()
     updatedAt: Date;
-
-    async isMatchPassword(password: string): Promise<boolean> {
-       return await verifyPassword(password, this.password)
-    }
 }
