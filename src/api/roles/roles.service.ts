@@ -1,26 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { RolesRepository } from './roles.repository';
+import { RoleResDto } from './dto/role-res.dto';
+import { QueryRoleDto } from './dto/query-role.dto';
+import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 
 @Injectable()
 export class RolesService {
-  create(createRoleDto: CreateRoleDto) {
-    return 'This action adds a new role';
+
+  constructor(private rolesRepository: RolesRepository) {}
+
+  create(createRoleDto: CreateRoleDto): Promise<RoleResDto> {
+    return this.rolesRepository.create(createRoleDto)
   }
 
-  findAll() {
-    return `This action returns all roles`;
+  findAll(queryRoleDto?: QueryRoleDto): Promise<PaginatedResDto<RoleResDto>> {
+    return this.rolesRepository.getMany(queryRoleDto)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
+  findOne(id: string) :Promise<RoleResDto> {
+    return this.rolesRepository.getOneById(id)
   }
 
-  update(id: number, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`;
+  update(id: string, updateRoleDto: UpdateRoleDto) :Promise<RoleResDto> {
+    return this.rolesRepository.update(id, updateRoleDto)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
+  remove(id: string) :Promise<void> {
+    return this.rolesRepository.remove(id)
   }
 }

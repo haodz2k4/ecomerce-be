@@ -11,7 +11,7 @@ import { Pagination } from "src/utils/pagination";
 
 
 @Injectable()
-export class RoleRepository implements IRepository<RoleResDto> {
+export class RolesRepository implements IRepository<RoleResDto> {
 
     constructor(private prisma: PrismaService) {}
 
