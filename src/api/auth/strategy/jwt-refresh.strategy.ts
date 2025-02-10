@@ -2,6 +2,7 @@ import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { StrategyName } from "src/constants/strategy.constant";
+import { PayloadType } from "../types/payload.type";
 
 
 export class JwtRefreshStrategy extends PassportStrategy(Strategy, StrategyName.JWT_REFRESH) {
@@ -14,8 +15,9 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, StrategyName.
         })
     }
 
-    validate(...args: any[]): unknown {
-        throw new Error("Method not implemented.");
+    validate(payload: PayloadType): PayloadType {
+        console.log(payload)
+        return payload
     }
     
 }
