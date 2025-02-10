@@ -19,7 +19,7 @@ export class CreateUserDto {
 
     @IsEnum(UserStatusEnum)
     @IsOptional()
-    status: UserStatusEnum;
+    status?: UserStatusEnum;
 
     @IsString()
     roleId: string;
