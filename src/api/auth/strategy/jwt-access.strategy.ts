@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { StrategyName } from "src/constants/strategy.constant";
+import { PayloadType } from "../types/payload.type";
 
 
 
@@ -17,8 +18,8 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, StrategyName.J
         });
     }
 
-    validate(...args: any[]): unknown {
-        return null 
+    validate(payload: PayloadType): PayloadType {
+        return payload
     }
     
 }

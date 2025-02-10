@@ -10,3 +10,5 @@ export enum SortOrderEnum {
 
 export const DefaultSortBy = 'createdAt'
 export const DefaultSortOrder = SortOrderEnum.DESC
+ 
+export const IS_PUBLIC_KEY = 'public'

@@ -16,7 +16,6 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, StrategyName.
     }
 
     validate(payload: PayloadType): PayloadType {
-        console.log(payload)
         return payload
     }
     

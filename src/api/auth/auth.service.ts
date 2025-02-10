@@ -7,6 +7,7 @@ import { plainToInstance } from 'class-transformer';
 import { LoginResDto } from './dto/login-res.dto';
 import { verifyPassword } from 'src/utils/password.util';
 import { Users } from '@prisma/client';
+import * as ms from 'ms';
 
 @Injectable()
 export class AuthService {
@@ -30,10 +31,12 @@ export class AuthService {
         const user = await this.validateUser(email, password);
         const {id} = user
         const token = await this.generateAuthToken(id, id);
+        const expiresIn = ms(this.configService.get('JWT_REFRESH_EXPIRES')) 
         return plainToInstance(LoginResDto, {
             id,
             roleId: id,
-            ...token
+            ...token,
+            expiresIn
         })
     }
 
@@ -43,12 +46,16 @@ export class AuthService {
             accessToken: await this.jwtService.signAsync(
                 {id, roleId},
                 {
-                    secret: this.configService.get<string>('JWT_ACCESS_SECRET')
+                    secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+                    expiresIn: this.configService.get<string>('JWT_ACCESS_EXPIRES')
                 }
             ),
             refreshToken: await this.jwtService.signAsync(
                 {id, roleId},
-                {secret: this.configService.get<string>('JWT_REFRESH_SECRET')}
+                {
+                    secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+                    expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRES')
+                }
             )
         }
         
