@@ -26,7 +26,8 @@ export class UsersRepository implements IRepository<UserResDto>{
             password,
             gender,
             status,
-            birthDate 
+            birthDate,
+            roleId 
         } = createUserDto;
         const isExists = await this.getUserByEmail(email);
         if(!isExists) {
@@ -38,12 +39,13 @@ export class UsersRepository implements IRepository<UserResDto>{
             password: await hashPassword(password),
             gender,
             status,
-            birthDate 
+            birthDate,
+            roleId
         }});
         return plainToInstance(UserResDto, user);
     }
 
-    async getUserByEmail(email: string): Promise<Users> {
+    async getUserByEmail(email: string): Promise<Users | null> {
         return await this.prisma.client.users.findFirst({
             where: {email}
         })

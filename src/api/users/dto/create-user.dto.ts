@@ -21,6 +21,9 @@ export class CreateUserDto {
     @IsOptional()
     status: UserStatusEnum;
 
+    @IsString()
+    roleId: string;
+
     @IsDate()
     @IsOptional()
     birthDate: Date;

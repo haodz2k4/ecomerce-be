@@ -11,6 +11,9 @@ export class UserResDto {
     fullName: string;
 
     @Expose()
+    roleId: string;
+
+    @Expose()
     avatar: string;
 
     @Expose()
