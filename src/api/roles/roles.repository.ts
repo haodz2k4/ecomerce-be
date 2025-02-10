@@ -47,6 +47,10 @@ export class RolesRepository implements IRepository<RoleResDto> {
                 keyword
             })
         }
+
+        if(finds.length > 0) {
+            where["AND"] = finds 
+        }
         const [roles, total] = await Promise.all([
             await this.prisma.roles.findMany({
                 where,

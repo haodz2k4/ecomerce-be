@@ -52,18 +52,29 @@ export class QueryDto {
         return (this.page - 1) * this.limit;
     }
 
-    getRangeCreatedAt(): IRange<Date> {
-        return {
-            gte: this.startCreatedAt,
-            lte: this.endCreatedAt
+    getRangeCreatedAt(): IRange<Date> | null {
+        const range: IRange<Date> = {};
+        if(this.startCreatedAt) {
+            range.gte = this.startCreatedAt
         }
+
+        if(this.endCreatedAt) {
+            range.lte = this.endCreatedAt;
+        }
+        return Object.keys(range).length === 0 ? null : range;
+        
     }
 
-    getRangeUpdatedAt(): IRange<Date> {
-        return {
-            gte: this.startUpdatedAt,
-            lte: this.endUpdatedAt
+    getRangeUpdatedAt(): IRange<Date> | null {
+        const range: IRange<Date> = {};
+        if(this.startUpdatedAt) {
+            range.gte = this.startUpdatedAt
         }
+
+        if(this.endUpdatedAt) {
+            range.lte = this.endUpdatedAt;
+        }
+        return Object.keys(range).length === 0 ? null : range;
     }
 
 }

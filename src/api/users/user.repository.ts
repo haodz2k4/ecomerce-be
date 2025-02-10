@@ -63,7 +63,6 @@ export class UsersRepository implements IRepository<UserResDto>{
         } = queryUserDto;
         const skip = queryUserDto.getSkip();
         const filters: Record<string, unknown>[] = [];
-        
         //KEYWORD
         if(keyword) {
             filters.push(
@@ -94,11 +93,37 @@ export class UsersRepository implements IRepository<UserResDto>{
                 }
             )
         }
+        //Range birth Date
+        const rangeBirthDate = queryUserDto.getRangeBirthDate();
+        if(rangeBirthDate) {
+            filters.push(
+                {
+                    birthDate: rangeBirthDate
+                }
+            )
+        }
 
+        //range createdAt 
+        const rangeCreatedAt = queryUserDto.getRangeCreatedAt();
+        if(rangeCreatedAt) {
+            filters.push(
+                {
+                    createdAt: rangeCreatedAt 
+                }
+            )
+        } 
+        //range updatedAt 
+        const rangeUpdatedAt = queryUserDto.getRangeUpdatedAt()
+        if(rangeUpdatedAt) {
+            filters.push({
+                updatedAt: rangeUpdatedAt
+            })
+        }
         const where: Record<string, unknown> = {}
         if(filters.length > 0) {
             where["AND"] = filters
         }
+
         const [users, total] = await Promise.all([
             this.prisma.client.users.findMany({
                 where,
@@ -110,7 +135,6 @@ export class UsersRepository implements IRepository<UserResDto>{
             }),
             this.getTotalDocument(where)
         ])
-        
         const pagination = new Pagination(page, limit,total);
         return new PaginatedResDto(plainToInstance(UserResDto, users), pagination);
     }
