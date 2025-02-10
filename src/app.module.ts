@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './api/users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './api/auth/auth.module';
+import { RolesModule } from './api/roles/roles.module';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { AuthModule } from './api/auth/auth.module';
       isGlobal: true
     }),
     UsersModule,
-    AuthModule
+    AuthModule,
+    RolesModule
   ],
   controllers: [],
   providers: [],
