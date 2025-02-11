@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString } from "class-validator";
+import { IsArray, IsEnum, IsOptional, IsString } from "class-validator";
 import { UserStatusEnum } from "src/constants/entity.constant";
 
 
@@ -14,5 +14,9 @@ export class CreateRoleDto {
     @IsEnum(UserStatusEnum)
     @IsOptional()
     status?: UserStatusEnum;
+
+    @IsArray()
+    @IsOptional()
+    permissionIds: string[];
 
 }

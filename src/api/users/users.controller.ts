@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,8 +6,6 @@ import { QueryUserDto } from './dto/query-user.dto';
 import { UserResDto } from './dto/user-res.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { ResponseMessage } from 'src/decorator/response-message.decorator';
-import { AuthGuard } from '@nestjs/passport';
-import { StrategyName } from 'src/constants/strategy.constant';
 
 @Controller('users')
 export class UsersController {

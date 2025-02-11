@@ -16,8 +16,22 @@ export class RolesRepository implements IRepository<RoleResDto> {
     constructor(private prisma: PrismaService) {}
 
     async create(createDto: CreateRoleDto): Promise<RoleResDto> {
+        const {
+            title,
+            description,
+            status,
+            permissionIds
+        } = createDto;
+        const permissions = permissionIds.map((item: string) => ({permissionId: item}));
         const role = await this.prisma.roles.create({
-            data: createDto
+            data: {
+                title,
+                description,
+                status,
+                permissions: {
+                    create: permissions
+                }
+            }
         })
         return plainToInstance(RoleResDto, role);
     }
@@ -68,6 +82,7 @@ export class RolesRepository implements IRepository<RoleResDto> {
     async getTotalDocument(where: Record<string, unknown>): Promise<number> {
         return await this.prisma.client.roles.count({where})
     }
+
     async getOneById(id: string): Promise<RoleResDto> {
         const role = await this.prisma.roles.findFirst({where: {id}});
         if(!role) {
@@ -76,6 +91,7 @@ export class RolesRepository implements IRepository<RoleResDto> {
 
         return plainToInstance(RoleResDto, role);
     }
+
     async update(id: string, updateDto: UpdateRoleDto): Promise<RoleResDto> {
         await this.getOneById(id);
         const role = await this.prisma.roles.update({
@@ -85,6 +101,7 @@ export class RolesRepository implements IRepository<RoleResDto> {
 
         return plainToInstance(RoleResDto, role);
     }
+
     async remove(id: string): Promise<void> {
         await this.getOneById(id);
         await this.prisma.client.roles.delete({id})

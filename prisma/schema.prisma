@@ -40,15 +40,15 @@ model Users {
 }
 
 model Roles {
-  id String @id @default(uuid())
-  title String 
-  description String? 
-  status Status @default(active)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  deletedAt DateTime?
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+  status      Status  @default(active)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
 
-  rolesPermission Roles_permissions[]
+  permissions Roles_permissions[]
 }
 
 enum CrudEnum {
@@ -59,23 +59,21 @@ enum CrudEnum {
 }
 
 model Permissions {
-  id String @id @default(uuid())
-  name CrudEnum 
-  resource String 
+  id         String  @id @default(uuid())
+  name       CrudEnum
+  resource   String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  rolesPermission Roles_permissions[]
+  roles      Roles_permissions[]
 }
 
 model Roles_permissions {
-  id Int @id @default(autoincrement())
-  roleId String 
-  roles Roles @relation(fields: [roleId], references: [id])
-  
-  permissionId String 
-  permissions Permissions @relation(fields: [permissionId], references: [id]) 
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id           Int    @id @default(autoincrement())
+  roleId       String
+  permissionId String
+  roles        Roles @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permissions  Permissions @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
