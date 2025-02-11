@@ -31,6 +31,13 @@ export class RolesRepository implements IRepository<RoleResDto> {
                 permissions: {
                     create: permissions
                 }
+            },
+            include: {
+                permissions: {
+                    select: {
+                        permission: true
+                    }
+                }
             }
         })
         return plainToInstance(RoleResDto, role);
@@ -70,12 +77,18 @@ export class RolesRepository implements IRepository<RoleResDto> {
                 where,
                 orderBy: {[sortBy]: sortOrder},
                 take: limit,
-                skip
+                skip,
+                include: {
+                    permissions: {
+                        select: {
+                            permission: true
+                        }
+                    }
+                }
             }),
             await this.getTotalDocument(where)
         ])
         const pagination = new Pagination(page, limit,total);
-
         return new PaginatedResDto(plainToInstance(RoleResDto, roles),pagination)
     }
 
@@ -84,11 +97,19 @@ export class RolesRepository implements IRepository<RoleResDto> {
     }
 
     async getOneById(id: string): Promise<RoleResDto> {
-        const role = await this.prisma.roles.findFirst({where: {id}});
+        const role = await this.prisma.roles.findUnique({
+            where: { id },
+            include: {
+                permissions: {
+                    select: {
+                        permission: true,
+                    },
+                },
+            },
+        });
         if(!role) {
             throw new NotFoundException("Role is not found");
         }
-
         return plainToInstance(RoleResDto, role);
     }
 
@@ -96,7 +117,14 @@ export class RolesRepository implements IRepository<RoleResDto> {
         await this.getOneById(id);
         const role = await this.prisma.roles.update({
             where: {id},
-            data: updateDto
+            data: updateDto,
+            include: {
+                permissions: {
+                    select: {
+                        permission: true
+                    }
+                }
+            }
         });
 
         return plainToInstance(RoleResDto, role);

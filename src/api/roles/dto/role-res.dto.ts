@@ -1,4 +1,5 @@
-import { Exclude, Expose } from "class-transformer";
+import { Exclude, Expose, Transform, Type } from "class-transformer";
+import { PermissionResDto } from "src/api/permissions/dto/permission-res.dto";
 import { RoleStatusEnum } from "src/constants/entity.constant";
 
 
@@ -16,6 +17,10 @@ export class RoleResDto {
 
     @Expose()
     status: RoleStatusEnum;
+
+    @Expose()
+    @Transform(({ value }) => value.map((p) => p.permission))
+    permissions: PermissionResDto[]
 
     @Expose()
     createdAt: Date;
