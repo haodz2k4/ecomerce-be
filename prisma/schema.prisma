@@ -48,3 +48,18 @@ model Roles {
   updatedAt  DateTime @updatedAt
   deletedAt DateTime?
 }
+
+enum CrudEnum {
+  create 
+  read
+  update
+  delete
+}
+
+model Permissions {
+  id String @id @default(uuid())
+  name CrudEnum 
+  resource String 
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

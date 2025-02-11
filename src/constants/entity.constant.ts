@@ -16,3 +16,11 @@ export enum RoleStatusEnum {
     ACTIVE = 'active',
     INACTIVE = 'inactive'
 }
+
+//Permissions 
+export enum PermissionNameEnum {
+    CREATE = 'create',
+    READ = 'read',
+    UPDATE = 'update',
+    DELETE = 'delete'
+}
