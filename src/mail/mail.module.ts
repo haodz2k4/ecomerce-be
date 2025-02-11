@@ -11,6 +11,7 @@ import { join } from 'path';
     useFactory: (configService: ConfigService) => (
       {
         transport: {
+          service: 'gmail',
           auth:{
             user: configService.get<string>('SMTP_USERNAME'),
             pass: configService.get<string>('SMTP_PASS')

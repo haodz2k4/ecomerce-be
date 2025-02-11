@@ -20,6 +20,7 @@ export class AuthController {
         return this.authService.login(loginDto)
     }
 
+    @Public()
     @Post('register')
     @Post()
     register(@Body() registerDto: RegisterDto):Promise<RegisterResDto> {

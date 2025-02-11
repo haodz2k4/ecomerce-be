@@ -7,12 +7,14 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtAccessStrategy } from './strategy/jwt-access.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   imports: [
     UsersModule,
     JwtModule.register({global: true}),
-    PassportModule
+    PassportModule,
+    MailModule
   ],
   providers: [AuthService, JwtAccessStrategy, {
     provide: APP_GUARD,

@@ -30,7 +30,7 @@ export class UsersRepository implements IRepository<UserResDto>{
             roleId 
         } = createUserDto;
         const isExists = await this.getUserByEmail(email);
-        if(!isExists) {
+        if(isExists) {
             throw new BadRequestException("Email is already taken")
         }
         const user = await this.prisma.users.create({data: {

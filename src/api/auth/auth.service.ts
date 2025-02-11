@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -11,6 +11,8 @@ import * as ms from 'ms';
 import { RegisterDto } from './dto/register.dto';
 import { RoleUser } from 'src/constants/role.constant';
 import { RegisterResDto } from './dto/register-res.dto';
+import { UserStatusEnum } from 'src/constants/entity.constant';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -18,13 +20,20 @@ export class AuthService {
     constructor(
         private usersService: UsersService,
         private jwtService: JwtService,
-        private configService: ConfigService
+        private configService: ConfigService,
+        private mailService: MailService
     ) {}
 
     async validateUser(email: string, password: string): Promise<Users> {
         const user = await this.usersService.getUserByEmail(email);
         if(!user || !await verifyPassword(password, user.password)){
-            throw new NotFoundException("Invalid email or password");
+            throw new UnauthorizedException("Invalid email or password");
+        }
+        if(!user.verified) {
+            throw new UnauthorizedException("User is not verify");
+        }
+        if(user.status === UserStatusEnum.INACTIVE) {
+            throw new UnauthorizedException("Account has been locked");
         }
         return user;
     }
@@ -76,6 +85,8 @@ export class AuthService {
         })
 
         const token = await this.generateAuthToken(user.id, RoleUser);
+        const verifyEmailToken = await this.generateVerifyEmailToken(user.id, user.roleId);
+        await this.mailService.sendUserVerifyEmail(email, fullName, verifyEmailToken)
         return plainToInstance(RegisterResDto, {
             id: user.id,
             roleId: RoleUser,
@@ -83,4 +94,19 @@ export class AuthService {
         
         })
     }
+
+    async generateVerifyEmailToken(userId: string, roleId: string): Promise<string> {
+         
+        return this.jwtService.signAsync(
+            {
+                id: userId, roleId
+            },
+            {
+                secret: this.configService.get('JWT_VERIFY_EMAIL_SECRET'),
+                expiresIn: this.configService.get('JWT_VERIFY_EMAIL_EXPIRES')
+            }
+        )
+    }
+
+    
 }
