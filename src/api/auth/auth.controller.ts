@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { LoginResDto } from './dto/login-res.dto';
@@ -23,8 +23,17 @@ export class AuthController {
     @Public()
     @Post('register')
     @Post()
-    @ResponseMessage('Register successfull, please check your email')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Register successfully, please check your email')
     register(@Body() registerDto: RegisterDto):Promise<RegisterResDto> {
         return this.authService.register(registerDto);
+    }
+
+    @Public()
+    @Get('verify')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Verify email successfully')
+    verify(@Query('token') token: string ) :Promise<void> {
+        return this.authService.verify(token)
     }
 }

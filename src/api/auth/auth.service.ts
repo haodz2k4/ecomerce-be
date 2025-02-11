@@ -73,7 +73,7 @@ export class AuthService {
         
     }
 
-    async register(registerDto: RegisterDto) {
+    async register(registerDto: RegisterDto) :Promise<RegisterResDto> {
         const {fullName, email, password, gender, birthDate} = registerDto
         const user = await this.usersService.create({
             fullName, 
@@ -109,5 +109,13 @@ export class AuthService {
         )
     }
 
+    async verify(token: string) :Promise<void> {
+        const payload = await this.jwtService.verifyAsync(token, {
+            secret: this.configService.get<string>('JWT_VERIFY_EMAIL_SECRET')
+        });
+
+        const {id} = payload;
+        await this.usersService.update(id, {verified: true})
+    }
     
 }
