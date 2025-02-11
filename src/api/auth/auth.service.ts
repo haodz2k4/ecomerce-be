@@ -81,16 +81,16 @@ export class AuthService {
             password, 
             gender, 
             birthDate,
-            roleId: RoleUser
+            roleId: RoleUser    
         })
 
-        const token = await this.generateAuthToken(user.id, RoleUser);
         const verifyEmailToken = await this.generateVerifyEmailToken(user.id, user.roleId);
         await this.mailService.sendUserVerifyEmail(email, fullName, verifyEmailToken)
+
         return plainToInstance(RegisterResDto, {
             id: user.id,
             roleId: RoleUser,
-            ...token
+            expiresIn: ms(this.configService.get('JWT_VERIFY_EMAIL_EXPIRES'))
         
         })
     }
@@ -99,7 +99,8 @@ export class AuthService {
          
         return this.jwtService.signAsync(
             {
-                id: userId, roleId
+                id: userId, 
+                roleId
             },
             {
                 secret: this.configService.get('JWT_VERIFY_EMAIL_SECRET'),

@@ -23,6 +23,7 @@ export class AuthController {
     @Public()
     @Post('register')
     @Post()
+    @ResponseMessage('Register successfull, please check your email')
     register(@Body() registerDto: RegisterDto):Promise<RegisterResDto> {
         return this.authService.register(registerDto);
     }

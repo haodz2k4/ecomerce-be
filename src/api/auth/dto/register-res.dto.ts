@@ -11,8 +11,5 @@ export class RegisterResDto {
     roleId: string;
 
     @Expose()
-    accessToken: string;
-
-    @Expose()
-    refreshToken: string;
+    expiresIn: number;
 }
