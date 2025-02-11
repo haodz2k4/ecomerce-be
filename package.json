@@ -36,6 +36,7 @@
     "class-validator": "^0.14.1",
     "date-fns": "^4.1.0",
     "ecomerce-be": "file:",
+    "handlebars": "^4.7.8",
     "ms": "^2.1.3",
     "nodemailer": "^6.10.0",
     "passport": "^0.7.0",
