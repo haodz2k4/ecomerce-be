@@ -5,6 +5,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './api/auth/auth.module';
 import { RolesModule } from './api/roles/roles.module';
 import { PermissionsModule } from './api/permissions/permissions.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { PermissionsModule } from './api/permissions/permissions.module';
     UsersModule,
     AuthModule,
     RolesModule,
-    PermissionsModule
+    PermissionsModule,
+    MailModule
   ],
   controllers: [],
   providers: [],
