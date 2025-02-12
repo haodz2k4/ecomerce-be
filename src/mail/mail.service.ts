@@ -1,4 +1,3 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -9,7 +8,6 @@ import { JobEnum } from 'src/constants/job.enum';
 export class MailService {
 
     constructor(
-        private mailerService: MailerService,
         private configService: ConfigService,
         @InjectQueue('mail') private mailQueue: Queue
     ) {}

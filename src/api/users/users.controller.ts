@@ -6,6 +6,7 @@ import { QueryUserDto } from './dto/query-user.dto';
 import { UserResDto } from './dto/user-res.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { ResponseMessage } from 'src/decorator/response-message.decorator';
+import { User } from 'src/decorator/user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -21,6 +22,12 @@ export class UsersController {
   @ResponseMessage('Get users successfully')
   findAll(@Query() queryUserDto: QueryUserDto) :Promise<PaginatedResDto<UserResDto>> {
     return this.usersService.findAll(queryUserDto);
+  }
+
+  @Get('me')
+  @ResponseMessage('Get current user')
+  getCurrentUser(@User('id') id: string) {
+    return this.usersService.findOne(id)
   }
 
   @Get(':id')
