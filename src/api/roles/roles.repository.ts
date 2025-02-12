@@ -93,7 +93,7 @@ export class RolesRepository implements IRepository<RoleResDto> {
     }
 
     async getTotalDocument(where: Record<string, unknown>): Promise<number> {
-        return await this.prisma.client.roles.count({where})
+        return await this.prisma.roles.count({where})
     }
 
     async getOneById(id: string): Promise<RoleResDto> {
@@ -132,7 +132,7 @@ export class RolesRepository implements IRepository<RoleResDto> {
 
     async remove(id: string): Promise<void> {
         await this.getOneById(id);
-        await this.prisma.client.roles.delete({id})
+        await this.prisma.roles.delete({where: {id}})
     }
 
 }

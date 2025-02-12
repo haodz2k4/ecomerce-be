@@ -20,33 +20,17 @@ export class UsersRepository implements IRepository<UserResDto>{
     constructor(private prisma: PrismaService) {}
 
     async create(createUserDto: CreateUserDto): Promise<UserResDto> {
-        const {
-            fullName,
-            email,
-            password,
-            gender,
-            status,
-            birthDate,
-            roleId 
-        } = createUserDto;
+        const {email} = createUserDto;
         const isExists = await this.getUserByEmail(email);
         if(isExists) {
             throw new BadRequestException("Email is already taken")
         }
-        const user = await this.prisma.users.create({data: {
-            fullName,
-            email,
-            password: await hashPassword(password),
-            gender,
-            status,
-            birthDate,
-            roleId
-        }});
+        const user = await this.prisma.users.create({data: createUserDto});
         return plainToInstance(UserResDto, user);
     }
 
     async getUserByEmail(email: string): Promise<Users | null> {
-        return await this.prisma.client.users.findFirst({
+        return await this.prisma.users.findFirst({
             where: {email}
         })
     }
@@ -125,7 +109,7 @@ export class UsersRepository implements IRepository<UserResDto>{
         }
 
         const [users, total] = await Promise.all([
-            this.prisma.client.users.findMany({
+            this.prisma.users.findMany({
                 where,
                 orderBy: {
                     [sortBy]: sortOrder
@@ -145,7 +129,7 @@ export class UsersRepository implements IRepository<UserResDto>{
     }
 
     async getOneById(id: unknown): Promise<UserResDto> {
-        const user = await this.prisma.client.users.findFirst({where: {id}});
+        const user = await this.prisma.users.findFirst({where: {id}});
         if(!user) {
             throw new NotFoundException("User is not found");
         }
@@ -154,12 +138,12 @@ export class UsersRepository implements IRepository<UserResDto>{
 
     async update(id: string, updateUserDto: UpdateUserDto): Promise<UserResDto> {
         await this.getOneById(id)
-        const user = await this.prisma.client.users.update({where: {id}, data: updateUserDto});
+        const user = await this.prisma.users.update({where: {id}, data: updateUserDto});
         return plainToInstance(UserResDto, user);
     }
 
     async remove(id: string): Promise<void> {
         await this.getOneById(id);
-        await this.prisma.client.users.delete({id});
+        await this.prisma.users.delete({where: {id}});
     }
 }
