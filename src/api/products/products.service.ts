@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductsReposiory } from './products.repository';
+import { ProductResDto } from './dto/product-res.dto';
+import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 
 @Injectable()
 export class ProductsService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+
+  constructor(private productsRepository: ProductsReposiory) {}
+
+  create(createProductDto: CreateProductDto) :Promise<ProductResDto> {
+    return this.productsRepository.create(createProductDto)
   }
 
-  findAll() {
-    return `This action returns all products`;
+  findAll(queryProductDto?: unknown): Promise<PaginatedResDto<ProductResDto>> {
+    return this.productsRepository.getMany(queryProductDto)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  findOne(id: string) :Promise<ProductResDto>  {
+    return this.productsRepository.getOneById(id)
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  update(id: string, updateProductDto: UpdateProductDto) :Promise<ProductResDto>  {
+    return this.productsRepository.update(id, updateProductDto)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  remove(id: string) :Promise<void> {
+    return this.productsRepository.remove(id)
   }
 }

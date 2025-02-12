@@ -24,3 +24,9 @@ export enum PermissionNameEnum {
     UPDATE = 'update',
     DELETE = 'delete'
 }
+
+//Products
+export enum ProductStatusEnum {
+    ACTIVE = 'active',
+    INACTIVE = 'inactive'
+}
