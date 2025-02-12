@@ -77,3 +77,17 @@ model Roles_permissions {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+model Products {
+  id String @id @default(uuid())
+  title String 
+  description String? 
+  discountPercentage Int 
+  price Int
+  status Status @default(active)
+  thumbnail String? 
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+}
