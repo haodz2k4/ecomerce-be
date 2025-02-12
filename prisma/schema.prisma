@@ -86,6 +86,7 @@ model Products {
   price Int
   status Status @default(active)
   thumbnail String? 
+  slug String? @unique
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

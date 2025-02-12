@@ -7,6 +7,7 @@ import { RolesModule } from './api/roles/roles.module';
 import { PermissionsModule } from './api/permissions/permissions.module';
 import { MailModule } from './mail/mail.module';
 import { BullModule } from '@nestjs/bullmq';
+import { ProductsModule } from './api/products/products.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { BullModule } from '@nestjs/bullmq';
     RolesModule,
     PermissionsModule,
     MailModule,
+    ProductsModule,
     BullModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({

@@ -5,6 +5,7 @@ import { PaginatedResDto } from "src/common/dto/paginated-res.dto";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { plainToInstance } from "class-transformer";
+import { generateSlug } from "src/utils/slug";
 
 
 
@@ -14,8 +15,22 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
     constructor(private prisma: PrismaService) {}
     
     async create(createDto: CreateProductDto): Promise<ProductResDto> {
+        const {
+            title,
+            description,
+            discountPercentage,
+            price,
+            status 
+        } = createDto
         const product = await this.prisma.products.create({
-            data: createDto 
+            data: {
+                title,
+                description,
+                discountPercentage,
+                price,
+                status,
+                slug: generateSlug(title)
+            } 
         })
         return plainToInstance(ProductResDto, product)
     }

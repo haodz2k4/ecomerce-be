@@ -7,6 +7,7 @@ import { UserResDto } from './dto/user-res.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { ResponseMessage } from 'src/decorator/response-message.decorator';
 import { User } from 'src/decorator/user.decorator';
+import { Public } from 'src/decorator/public.decorator';
 
 @Controller('users')
 export class UsersController {

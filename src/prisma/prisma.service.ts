@@ -5,6 +5,9 @@ import { PrismaClientExtended } from './custom-prisma-client';
 @Injectable()
 export class PrismaService extends PrismaClientExtended implements OnModuleInit, OnModuleDestroy {
   
+  constructor() {
+    super()
+  }
   async onModuleInit() {
     await this.$connect();
   }

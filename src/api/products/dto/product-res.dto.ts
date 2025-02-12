@@ -11,6 +11,9 @@ export class ProductResDto {
     title: string;
 
     @Expose()
+    slug: string;
+
+    @Expose()
     description: string;
 
     @Expose()
