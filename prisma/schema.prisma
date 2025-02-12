@@ -82,7 +82,7 @@ model Products {
   id String @id @default(uuid())
   title String 
   description String? 
-  discountPercentage Int 
+  discountPercentage Int? @default(0)
   price Int
   status Status @default(active)
   thumbnail String? 

@@ -4,6 +4,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductResDto } from './dto/product-res.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
+import { Public } from 'src/decorator/public.decorator';
 
 @Controller('products')
 export class ProductsController {
@@ -15,11 +16,13 @@ export class ProductsController {
   }
 
   @Get()
+  @Public()
   findAll() :Promise<PaginatedResDto<ProductResDto>> {
     return this.productsService.findAll();
   }
 
   @Get(':id')
+  @Public()
   findOne(@Param('id') id: string) :Promise<ProductResDto>  {
     return this.productsService.findOne(id);
   }
