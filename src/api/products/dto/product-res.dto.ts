@@ -1,4 +1,4 @@
-import { Exclude, Expose } from "class-transformer";
+import { Exclude, Expose, Transform } from "class-transformer";
 import { ProductStatusEnum } from "src/constants/entity.constant";
 
 @Exclude()
@@ -27,6 +27,10 @@ export class ProductResDto {
 
     @Expose()
     thumbnail: string;
+
+    @Expose()
+    @Transform(({value}) => value.map((item) => item.url))
+    images: string[]
 
     @Expose()
     createdAt: Date;

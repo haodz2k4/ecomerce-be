@@ -84,7 +84,10 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                     where,
                     orderBy: {[sortBy]: sortOrder},
                     skip,
-                    take: limit
+                    take: limit,
+                    include: {
+                        images: true
+                    }
                 }),
                 this.totalDocument(where)
             ]
@@ -99,17 +102,24 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
     }
 
     async getOneById(id: string): Promise<ProductResDto> {
-        const product = await this.prisma.products.findUnique({where: {id}});
+        const product = await this.prisma.products.findUnique({
+            where: {id},
+            include: {
+                images: true
+            } 
+        });
         if(!product) {
             throw new NotFoundException("Product is not found")
         }
-
         return plainToInstance(ProductResDto, product);
     }
 
     async updateProductImage(id: string, urlThumbnail: string, urlImages: string[]) {
         await this.getOneById(id);
-        await this.prisma.products.update({where: {id}, data: {thumbnail: urlThumbnail}});
+        await this.prisma.products.update({
+            where: {id}, 
+            data: {thumbnail: urlThumbnail}
+        });
         await this.prisma.products_images.createMany({
             data: urlImages.map((item) => ({
                 url: item,
@@ -119,7 +129,12 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
     }
 
     async getOneBySlug(slug: string): Promise<ProductResDto> {
-        const product = await this.prisma.products.findUnique({where: {slug}})
+        const product = await this.prisma.products.findUnique({
+            where: {slug},
+            include: {
+                images: true
+            }
+        })
         if(!product) {
             throw new NotFoundException("Product is not found")
         }
@@ -129,7 +144,13 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
 
     async update(id: string, updateDto: unknown): Promise<ProductResDto> {
         await this.getOneById(id)
-        const product = await this.prisma.products.update({where: {id}, data: updateDto});
+        const product = await this.prisma.products.update({
+            where: {id}, 
+            data: updateDto,
+            include: {
+                images: true
+            }
+        });
         if(!product) {
             throw new NotFoundException("Product is not found")
         }
