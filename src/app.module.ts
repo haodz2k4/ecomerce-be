@@ -8,6 +8,7 @@ import { PermissionsModule } from './api/permissions/permissions.module';
 import { MailModule } from './mail/mail.module';
 import { BullModule } from '@nestjs/bullmq';
 import { ProductsModule } from './api/products/products.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { ProductsModule } from './api/products/products.module';
           password: configService.get<string>('REDIS_PASSWORD')
         }
       })
-    })
+    }),
+    CloudinaryModule
   ],
   controllers: [],
   providers: [],

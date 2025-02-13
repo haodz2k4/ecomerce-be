@@ -88,7 +88,19 @@ model Products {
   thumbnail String? 
   slug String? @unique
 
+  images Products_images[]
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
+}
+
+model Products_images {
+  id Int @id @default(autoincrement())
+  productId String 
+  product Products @relation(fields: [productId], references: [id])
+  url String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
