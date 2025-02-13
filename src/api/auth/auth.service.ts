@@ -31,7 +31,9 @@ export class AuthService {
             throw new UnauthorizedException("Invalid email or password");
         }
         if(!user.verified) {
-            throw new UnauthorizedException("User is not verify");
+            const verifyEmailToken = await this.generateVerifyEmailToken(user.id, user.roleId);
+            await this.mailService.sendUserVerifyEmail(email, user.fullName, verifyEmailToken)
+            throw new UnauthorizedException("User is not verify, please check your email to verify again");
         }
         if(user.status === UserStatusEnum.INACTIVE) {
             throw new UnauthorizedException("Account has been locked");
@@ -43,15 +45,14 @@ export class AuthService {
         const {email, password} = loginDto
         const user = await this.validateUser(email, password);
         const {id, roleId} = user
-        const expiresIn = ms(this.configService.get('JWT_REFRESH_EXPIRES')) 
+        const expiresIn = parseInt(ms(this.configService.get('JWT_REFRESH_EXPIRES')))
         const session = await this.usersService.createUserSession(id,new Date(Date.now() + expiresIn) )
         const token = await this.generateAuthToken(id, id, session.id);
-        
         return plainToInstance(LoginResDto, {
             id,
             roleId,
             ...token,
-            expiresIn
+            expiresIn: expiresIn / 1000
         })
     }
 
