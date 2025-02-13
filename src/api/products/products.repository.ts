@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { IRepository } from "src/common/interface/repository.interface";
 import { ProductResDto } from "./dto/product-res.dto";
 import { PaginatedResDto } from "src/common/dto/paginated-res.dto";
@@ -113,8 +113,13 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         return await this.prisma.products.count({where})
     }
 
-    getOneById(id: unknown): Promise<ProductResDto> {
-        throw new Error("Method not implemented.");
+    async getOneById(id: string): Promise<ProductResDto> {
+        const product = await this.prisma.products.findUnique({where: {id}});
+        if(!product) {
+            throw new NotFoundException("Product is not found")
+        }
+
+        return plainToInstance(ProductResDto, product);
     }
 
     update(id: unknown, updateDto: unknown): Promise<ProductResDto> {
