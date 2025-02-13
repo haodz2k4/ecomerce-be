@@ -107,6 +107,17 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         return plainToInstance(ProductResDto, product);
     }
 
+    async updateProductImage(id: string, urlThumbnail: string, urlImages: string[]) {
+        await this.getOneById(id);
+        await this.prisma.products.update({where: {id}, data: {thumbnail: urlThumbnail}});
+        await this.prisma.products_images.createMany({
+            data: urlImages.map((item) => ({
+                url: item,
+                productId: id
+            }))
+        })
+    }
+
     async getOneBySlug(slug: string): Promise<ProductResDto> {
         const product = await this.prisma.products.findUnique({where: {slug}})
         if(!product) {
