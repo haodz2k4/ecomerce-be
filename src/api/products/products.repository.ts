@@ -86,7 +86,11 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                     skip,
                     take: limit,
                     include: {
-                        images: true
+                        images: {
+                            select: {
+                                url: true
+                            }
+                        }
                     }
                 }),
                 this.totalDocument(where)
@@ -105,8 +109,12 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         const product = await this.prisma.products.findUnique({
             where: {id},
             include: {
-                images: true
-            } 
+                images: {
+                    select: {
+                        url: true
+                    }
+                }
+            }
         });
         if(!product) {
             throw new NotFoundException("Product is not found")
@@ -114,7 +122,7 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         return plainToInstance(ProductResDto, product);
     }
 
-    async updateProductImage(id: string, urlThumbnail: string, urlImages: string[]) {
+    async updateProductImage(id: string, urlThumbnail: string, urlImages: string[]): Promise<void> {
         await this.getOneById(id);
         await this.prisma.products.update({
             where: {id}, 
@@ -132,7 +140,11 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         const product = await this.prisma.products.findUnique({
             where: {slug},
             include: {
-                images: true
+                images: {
+                    select: {
+                        url: true
+                    }
+                }
             }
         })
         if(!product) {
@@ -148,7 +160,11 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
             where: {id}, 
             data: updateDto,
             include: {
-                images: true
+                images: {
+                    select: {
+                        url: true
+                    }
+                }
             }
         });
         if(!product) {

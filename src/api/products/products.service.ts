@@ -28,7 +28,7 @@ export class ProductsService {
     return this.productsRepository.getOneById(id)
   }
 
-  async upload(id: string, uploadProductDto: UploadProduct) {
+  async upload(id: string, uploadProductDto: UploadProduct): Promise<void> {
     const [thumbnails, images] = await Promise.all([
       this.cloudinaryService.uploadMulti(uploadProductDto.thumbnail),
       this.cloudinaryService.uploadMulti(uploadProductDto.images)
