@@ -5,12 +5,16 @@ import { UsersRepository } from './user.repository';
 import { UserResDto } from './dto/user-res.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
-import { Users } from '@prisma/client';
+import { Sessions, Users } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
 
   constructor(private readonly userRepository: UsersRepository) {}
+
+  async createUserSession(userId: string, expiresIn: Date): Promise<Sessions> {
+    return this.userRepository.createUserSession(userId, expiresIn)
+  }
 
   create(createUserDto: CreateUserDto): Promise<UserResDto> {
     return this.userRepository.create(createUserDto)

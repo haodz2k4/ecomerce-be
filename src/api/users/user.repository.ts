@@ -5,11 +5,10 @@ import { UserResDto } from "./dto/user-res.dto";
 import { PaginatedResDto } from "src/common/dto/paginated-res.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { plainToInstance } from "class-transformer";
-import { hashPassword } from "src/utils/password.util";
 import { QueryUserDto } from "./dto/query-user.dto";
 import { Pagination } from "src/utils/pagination";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { Users } from "@prisma/client";
+import { Sessions, Users } from "@prisma/client";
 
 
 
@@ -18,6 +17,13 @@ import { Users } from "@prisma/client";
 export class UsersRepository implements IRepository<UserResDto>{
 
     constructor(private prisma: PrismaService) {}
+
+    async createUserSession(userId: string, expiresIn: Date): Promise<Sessions> {
+        return this.prisma.sessions.create({data: {
+            expiresIn,
+            userId
+        }})
+    }
 
     async create(createUserDto: CreateUserDto): Promise<UserResDto> {
         const {email} = createUserDto;

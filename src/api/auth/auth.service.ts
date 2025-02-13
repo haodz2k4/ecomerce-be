@@ -43,8 +43,10 @@ export class AuthService {
         const {email, password} = loginDto
         const user = await this.validateUser(email, password);
         const {id, roleId} = user
-        const token = await this.generateAuthToken(id, id);
         const expiresIn = ms(this.configService.get('JWT_REFRESH_EXPIRES')) 
+        const session = await this.usersService.createUserSession(id,new Date(Date.now() + expiresIn) )
+        const token = await this.generateAuthToken(id, id, session.id);
+        
         return plainToInstance(LoginResDto, {
             id,
             roleId,
@@ -53,18 +55,18 @@ export class AuthService {
         })
     }
 
-    async generateAuthToken(id: string, roleId: string) {
+    async generateAuthToken(id: string, roleId: string, sessionId: string) {
 
         return {
             accessToken: await this.jwtService.signAsync(
-                {id, roleId},
+                {id, roleId, sessionId},
                 {
                     secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
                     expiresIn: this.configService.get<string>('JWT_ACCESS_EXPIRES')
                 }
             ),
             refreshToken: await this.jwtService.signAsync(
-                {id, roleId},
+                {id, roleId, sessionId},
                 {
                     secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
                     expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRES')

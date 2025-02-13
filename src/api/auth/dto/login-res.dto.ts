@@ -10,6 +10,9 @@ export class LoginResDto {
     roleId: string;
 
     @Expose()
+    sessionId: string;
+
+    @Expose()
     accessToken: string;
 
     @Expose()
