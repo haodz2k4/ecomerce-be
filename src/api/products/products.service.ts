@@ -4,6 +4,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsReposiory } from './products.repository';
 import { ProductResDto } from './dto/product-res.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
+import { QueryProductDto } from './dto/query-product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -14,7 +15,7 @@ export class ProductsService {
     return this.productsRepository.create(createProductDto)
   }
 
-  findAll(queryProductDto?: unknown): Promise<PaginatedResDto<ProductResDto>> {
+  findAll(queryProductDto?: QueryProductDto): Promise<PaginatedResDto<ProductResDto>> {
     return this.productsRepository.getMany(queryProductDto)
   }
 
