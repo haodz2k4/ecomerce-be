@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile, UploadedFiles, HttpCode, HttpStatus } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -14,6 +14,12 @@ export class ProductsController {
   constructor(
     private readonly productsService: ProductsService
   ) {}
+
+  @Delete(':id/remove-images')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  removeMultiImage(@Param('id') id: string, @Body('ids') ids: number[]) {
+    return this.productsService.removeMultiImage(id, ids)
+  }
 
   @Post()
   create(@Body() createProductDto: CreateProductDto) :Promise<ProductResDto> {

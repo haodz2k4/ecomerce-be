@@ -46,6 +46,10 @@ export class ProductsService {
     return this.productsRepository.update(id, updateProductDto)
   }
 
+  async removeMultiImage(productId: string, ids: number[]) :Promise<void>  {
+    await this.productsRepository.removeMultiImage(productId,ids )
+  }
+
   remove(id: string) :Promise<void> {
     return this.productsRepository.remove(id)
   }
