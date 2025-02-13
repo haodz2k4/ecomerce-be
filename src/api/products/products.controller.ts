@@ -28,6 +28,12 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
+  @Get('slug/:slug')
+  @Public()
+  getOneBySlug(@Param('slug') slug: string) :Promise<ProductResDto> {
+    return this.productsService.getOneBySlug(slug);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) :Promise<ProductResDto> {
     return this.productsService.update(id, updateProductDto);

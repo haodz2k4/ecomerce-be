@@ -122,6 +122,15 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         return plainToInstance(ProductResDto, product);
     }
 
+    async getOneBySlug(slug: string): Promise<ProductResDto> {
+        const product = await this.prisma.products.findUnique({where: {slug}})
+        if(!product) {
+            throw new NotFoundException("Product is not found")
+        }
+
+        return plainToInstance(ProductResDto, product);
+    }
+
     update(id: unknown, updateDto: unknown): Promise<ProductResDto> {
         throw new Error("Method not implemented.");
     }

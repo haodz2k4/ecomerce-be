@@ -23,6 +23,10 @@ export class ProductsService {
     return this.productsRepository.getOneById(id)
   }
 
+  getOneBySlug(slug: string) :Promise<ProductResDto> {
+    return this.productsRepository.getOneBySlug(slug);
+  }
+
   update(id: string, updateProductDto: UpdateProductDto) :Promise<ProductResDto>  {
     return this.productsRepository.update(id, updateProductDto)
   }
