@@ -11,6 +11,7 @@ import { ProductsModule } from './api/products/products.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
+import { CategoriesModule } from './api/categories/categories.module';
 @Module({
   imports: [
     PrismaModule,
@@ -45,7 +46,8 @@ import * as redisStore from 'cache-manager-redis-store';
         username: configService.get<string>('REDIS_USERNAME'),
         password: configService.get<string>('REDIS_PASSWORD')
       })
-    })
+    }),
+    CategoriesModule
   ],
   controllers: [],
   providers: [],

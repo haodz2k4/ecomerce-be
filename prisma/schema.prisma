@@ -113,3 +113,14 @@ model Products_images {
   updatedAt   DateTime @updatedAt
 }
 
+model Categories {
+  id Int @id @default(autoincrement())
+  title String
+  description String?
+  thumbnail String?
+  status Status 
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+}
