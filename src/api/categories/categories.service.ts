@@ -1,26 +1,32 @@
+import { CategoriesRepository } from './categories.repository';
 import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CategoriesResDto } from './dto/categories-res.dto';
+import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 
 @Injectable()
 export class CategoriesService {
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+
+  constructor(private categoriesRepository: CategoriesRepository) {}
+
+  create(createCategoryDto: CreateCategoryDto): Promise<CategoriesResDto> {
+    return this.categoriesRepository.create(createCategoryDto)
   }
 
-  findAll() {
-    return `This action returns all categories`;
+  findAll() :Promise<PaginatedResDto<CategoriesResDto>> {
+    return this.categoriesRepository.getMany()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  findOne(id: string) :Promise<CategoriesResDto> {
+    return this.categoriesRepository.getOneById(id)
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    return this.categoriesRepository.update(id, updateCategoryDto)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  remove(id: string) {
+    return this.categoriesRepository.remove(id)
   }
 }
