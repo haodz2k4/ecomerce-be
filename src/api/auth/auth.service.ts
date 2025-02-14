@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -13,6 +13,9 @@ import { RoleUser } from 'src/constants/role.constant';
 import { RegisterResDto } from './dto/register-res.dto';
 import { UserStatusEnum } from 'src/constants/entity.constant';
 import { MailService } from 'src/mail/mail.service';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+import { generateCacheKey } from 'src/utils/cache.util';
+import { CacheKeyEnum } from 'src/constants/cache.constant';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +24,8 @@ export class AuthService {
         private usersService: UsersService,
         private jwtService: JwtService,
         private configService: ConfigService,
-        private mailService: MailService
+        private mailService: MailService,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache
     ) {}
 
     async validateUser(email: string, password: string): Promise<Users> {
@@ -56,6 +60,10 @@ export class AuthService {
         })
     }
 
+    async logout(sessionId: string) :Promise<void> {
+        await this.cacheManager.set(generateCacheKey(CacheKeyEnum.REFRESH_BLACKLIST, sessionId), true)
+    }
+
     async generateAuthToken(id: string, roleId: string, sessionId: string) {
 
         return {
@@ -75,6 +83,10 @@ export class AuthService {
             )
         }
         
+    }
+
+    async isTokenInBlackList(sessionId: string) :Promise<boolean> {
+        return await this.cacheManager.get(generateCacheKey(CacheKeyEnum.REFRESH_BLACKLIST, sessionId)) ?? false
     }
 
     async register(registerDto: RegisterDto) :Promise<RegisterResDto> {

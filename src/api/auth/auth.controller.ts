@@ -6,6 +6,8 @@ import { ResponseMessage } from 'src/decorator/response-message.decorator';
 import { Public } from 'src/decorator/public.decorator';
 import { RegisterDto } from './dto/register.dto';
 import { RegisterResDto } from './dto/register-res.dto';
+import { User } from 'src/decorator/user.decorator';
+import { PayloadType } from './types/payload.type';
 
 @Controller('auth')
 export class AuthController {
@@ -18,6 +20,12 @@ export class AuthController {
     @ResponseMessage('Login success')
     login(@Body() loginDto: LoginDto) :Promise<LoginResDto> {
         return this.authService.login(loginDto)
+    }
+
+    @Post('logout')
+    logout(@User() user: PayloadType) :Promise<void> {
+        const {sessionId} = user
+        return this.authService.logout(sessionId)
     }
 
     @Public()
