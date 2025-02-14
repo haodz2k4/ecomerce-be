@@ -20,6 +20,10 @@ async function bootstrap() {
       }
     )
   )
+  //cors
+  app.enableCors({
+    origin: configService.get('CORS_ORIGIN')
+  })
 
   //Versioning
   app.setGlobalPrefix('api')

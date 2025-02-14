@@ -24,6 +24,7 @@ import { CategoriesModule } from './api/categories/categories.module';
     PermissionsModule,
     MailModule,
     ProductsModule,
+    CategoriesModule,
     BullModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -46,8 +47,7 @@ import { CategoriesModule } from './api/categories/categories.module';
         username: configService.get<string>('REDIS_USERNAME'),
         password: configService.get<string>('REDIS_PASSWORD')
       })
-    }),
-    CategoriesModule
+    })
   ],
   controllers: [],
   providers: [],

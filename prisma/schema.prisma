@@ -118,7 +118,7 @@ model Categories {
   title String
   description String?
   thumbnail String?
-  status Status 
+  status Status @default(active)
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
