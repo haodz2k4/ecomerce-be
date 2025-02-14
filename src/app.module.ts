@@ -9,7 +9,8 @@ import { MailModule } from './mail/mail.module';
 import { BullModule } from '@nestjs/bullmq';
 import { ProductsModule } from './api/products/products.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
-
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 @Module({
   imports: [
     PrismaModule,
@@ -33,7 +34,18 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
         }
       })
     }),
-    CloudinaryModule
+    CloudinaryModule,
+    CacheModule.registerAsync({
+      isGlobal: true,
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        store: redisStore,
+        host: configService.get<string>('REDIS_HOST'),
+        port: configService.get<number>('REDIS_PORT'),
+        username: configService.get<string>('REDIS_USERNAME'),
+        password: configService.get<string>('REDIS_PASSWORD')
+      })
+    })
   ],
   controllers: [],
   providers: [],
