@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsEnum, IsNumber, IsOptional, Min } from "class-validator";
+import { IsEnum, IsNumber, IsOptional, IsUUID, Min } from "class-validator";
 import { QueryDto } from "src/common/dto/query.dto";
 import { ProductStatusEnum } from "src/constants/entity.constant";
 import { IRange } from "src/common/interface/app.interface";
@@ -30,6 +30,10 @@ export class QueryProductDto extends QueryDto {
     @Type(() => Number)
     @IsOptional()
     maxPercentage?: number;
+
+    @IsUUID()
+    @IsOptional()
+    categoryId?: string;
 
 
     getRangePrice(): IRange<number> | null {

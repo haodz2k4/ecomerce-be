@@ -17,7 +17,10 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
     
     async create(createDto: CreateProductDto): Promise<ProductResDto> {
         const product = await this.prisma.products.create({
-            data: createDto
+            data: createDto,
+            include: {
+                category: true
+            }
         })
         return plainToInstance(ProductResDto, product)
     }
@@ -26,6 +29,7 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         
         const {
             status,
+            categoryId,
             keyword,
             page,
             limit,
@@ -38,6 +42,11 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         if(status) {
             filters.push({
                 status
+            })
+        }
+        if(categoryId) {
+            filters.push({
+                categoryId
             })
         }
         if(keyword) {
@@ -90,13 +99,13 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                             select: {
                                 url: true
                             }
-                        }
+                        },
+                        category: true
                     }
                 }),
                 this.totalDocument(where)
             ]
         )
-
         const pagination = new Pagination(page, limit,total );
         return new PaginatedResDto(plainToInstance(ProductResDto, products), pagination)
     }
@@ -164,7 +173,8 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                     select: {
                         url: true
                     }
-                }
+                },
+                category: true
             }
         });
         if(!product) {

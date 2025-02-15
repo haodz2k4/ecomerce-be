@@ -1,4 +1,5 @@
-import { Exclude, Expose, Transform } from "class-transformer";
+import { Exclude, Expose, Transform, Type } from "class-transformer";
+import { CategoriesResDto } from "src/api/categories/dto/categories-res.dto";
 import { ProductStatusEnum } from "src/constants/entity.constant";
 
 @Exclude()
@@ -29,8 +30,12 @@ export class ProductResDto {
     thumbnail: string;
 
     @Expose()
-    @Transform(({value}) => value.map((item) => item.url))
+    @Transform(({value = []}) => value.map((item) => item.url))
     images: string[]
+
+    @Expose()
+    @Type(() => CategoriesResDto)
+    category: CategoriesResDto;
 
     @Expose()
     createdAt: Date;

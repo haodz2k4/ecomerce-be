@@ -90,6 +90,8 @@ model Products {
   id String @id @default(uuid())
   title String 
   description String? 
+  categoryId String 
+  category Categories @relation(fields: [categoryId], references: [id])
   discountPercentage Int? @default(0)
   price Int
   status Status @default(active)
@@ -118,6 +120,7 @@ model Categories {
   title String
   description String?
   thumbnail String?
+  products Products[] 
   status Status @default(active)
   
   createdAt   DateTime @default(now())
