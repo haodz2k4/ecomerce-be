@@ -3,7 +3,7 @@ import { QueryDto } from "src/common/dto/query.dto";
 import { CategoryStatusEnum } from "src/constants/entity.constant";
 
 
-export class QueryCategory extends QueryDto {
+export class QueryCategoryDto extends QueryDto {
 
     @IsEnum(CategoryStatusEnum)
     @IsOptional()

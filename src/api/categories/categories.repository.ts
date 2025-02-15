@@ -4,9 +4,11 @@ import { CategoriesResDto } from "./dto/categories-res.dto";
 import { PaginatedResDto } from "src/common/dto/paginated-res.dto";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { plainToInstance } from "class-transformer";
+import { QueryCategoryDto } from "./dto/query-category.dto";
+import { Pagination } from "src/utils/pagination";
 
 
 @Injectable()
@@ -20,16 +22,70 @@ export class CategoriesRepository implements IRepository<CategoriesResDto> {
         return plainToInstance(CategoriesResDto, category)
     }
 
-    getMany(queryDto?: unknown): Promise<PaginatedResDto<CategoriesResDto>> {
-        throw new Error("Method not implemented.");
+    async getMany(queryDto?: QueryCategoryDto): Promise<PaginatedResDto<CategoriesResDto>> {
+        const  {
+            status,
+            keyword,
+            page,
+            limit,
+            sortBy,
+            sortOrder
+        }  = queryDto
+
+        const skip = queryDto.getSkip()
+        const where: Record<string, unknown> = {};
+        const filters = [];
+        if(keyword) {
+            filters.push({title: {contains: keyword}})
+        }
+        if(status) {
+            filters.push({status})
+        }
+        const rangeCreatedAt = queryDto.getRangeCreatedAt();
+        if(rangeCreatedAt) {
+            filters.push({createdAt: rangeCreatedAt})
+        }
+
+        const rangeUpdateAt = queryDto.getRangeUpdatedAt();
+        if(rangeUpdateAt) {
+            filters.push({updatedAt: rangeUpdateAt});
+        }
+        if(filters.length > 0) {
+            where["AND"] = filters
+        }
+        const [categories, total] = await Promise.all([
+            this.prisma.categories.findMany({
+                where,
+                take: limit,
+                skip,
+                orderBy: {
+                    [sortBy]: sortOrder
+                }
+            }),
+            this.getTotalDocument(where)
+        ])
+
+        const pagination = new Pagination(page, limit, total);
+        return new PaginatedResDto(plainToInstance(CategoriesResDto, categories), pagination)
+
     }
 
-    getOneById(id: string): Promise<CategoriesResDto> {
-        throw new Error("Method not implemented.");
+    async getTotalDocument(where?: Record<string, unknown>) :Promise<number> {
+        return await this.prisma.categories.count({where})
     }
 
-    update(id: string, updateDto: UpdateCategoryDto): Promise<CategoriesResDto> {
-        throw new Error("Method not implemented.");
+    async getOneById(id: string): Promise<CategoriesResDto> {
+        const category = await this.prisma.categories.findUnique({where: {id}});
+        if(!category) {
+            throw new NotFoundException("Category is not found");
+        }
+        return plainToInstance(CategoriesResDto, category);
+    }   
+
+    async update(id: string, updateDto: UpdateCategoryDto): Promise<CategoriesResDto> {
+        await this.getOneById(id);
+        const category = await this.prisma.categories.update({where: {id}, data: updateDto});
+        return plainToInstance(CategoriesResDto, category);
     }
 
     remove(id: string): Promise<void> {

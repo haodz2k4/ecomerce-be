@@ -1,3 +1,4 @@
+import { QueryCategoryDto } from './dto/query-category.dto';
 import { CategoriesRepository } from './categories.repository';
 import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -14,8 +15,8 @@ export class CategoriesService {
     return this.categoriesRepository.create(createCategoryDto)
   }
 
-  findAll() :Promise<PaginatedResDto<CategoriesResDto>> {
-    return this.categoriesRepository.getMany()
+  findAll(queryCategoryDto?: QueryCategoryDto) :Promise<PaginatedResDto<CategoriesResDto>> {
+    return this.categoriesRepository.getMany(queryCategoryDto)
   }
 
   findOne(id: string) :Promise<CategoriesResDto> {

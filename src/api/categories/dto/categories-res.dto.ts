@@ -1,8 +1,8 @@
-import { Expose } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 import { CategoryStatusEnum } from "src/constants/entity.constant";
 
 
-
+@Exclude()
 export class CategoriesResDto {
 
     @Expose()

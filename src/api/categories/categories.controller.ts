@@ -1,9 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CategoriesResDto } from './dto/categories-res.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
+import { Public } from 'src/decorator/public.decorator';
+import { QueryCategoryDto } from './dto/query-category.dto';
+
 
 @Controller('categories')
 export class CategoriesController {
@@ -15,11 +18,13 @@ export class CategoriesController {
   }
 
   @Get()
-  findAll() :Promise<PaginatedResDto<CategoriesResDto>> {
-    return this.categoriesService.findAll();
+  @Public()
+  findAll(@Query() queryCategoryDto: QueryCategoryDto) :Promise<PaginatedResDto<CategoriesResDto>> {
+    return this.categoriesService.findAll(queryCategoryDto);
   }
 
   @Get(':id')
+  @Public()
   findOne(@Param('id') id: string) :Promise<CategoriesResDto> {
     return this.categoriesService.findOne(id);
   }
