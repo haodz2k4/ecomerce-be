@@ -50,11 +50,6 @@ export function softDeleteExtension(prisma: PrismaClient) {
         }
       },
       products: {
-        async create({ args, query }) {
-          const title = args.data.title as string;
-          args.data.slug = generateSlug(title)
-          return query(args);
-        },
         async update({args, query}) {
           const title = args.data.title as string;
           if (title) {
@@ -65,6 +60,15 @@ export function softDeleteExtension(prisma: PrismaClient) {
         }
         
       },
+      categories: {
+        async update({args, query}) {
+          const title = args.data.title as string;
+          if(title) {
+            args.data.slug = generateSlug(title);
+          }
+          return query(args)
+        }
+      }
     },
   });
 }

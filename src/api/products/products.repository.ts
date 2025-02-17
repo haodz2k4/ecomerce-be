@@ -7,6 +7,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { plainToInstance } from "class-transformer";
 import { QueryProductDto } from "./dto/query-product.dto";
 import { Pagination } from "src/utils/pagination";
+import { generateSlug } from "src/utils/slug";
 
 
 
@@ -16,8 +17,17 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
     constructor(private prisma: PrismaService) {}
     
     async create(createDto: CreateProductDto): Promise<ProductResDto> {
+        const {title, categoryId, description, discountPercentage, price, status} = createDto;
         const product = await this.prisma.products.create({
-            data: createDto,
+            data: {
+                title, 
+                categoryId, 
+                description, 
+                discountPercentage, 
+                price, 
+                status,
+                slug: generateSlug(title)
+            },
             include: {
                 category: true
             }
@@ -122,7 +132,8 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                     select: {
                         url: true
                     }
-                }
+                },
+                category: true
             }
         });
         if(!product) {

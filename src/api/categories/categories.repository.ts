@@ -9,6 +9,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { plainToInstance } from "class-transformer";
 import { QueryCategoryDto } from "./dto/query-category.dto";
 import { Pagination } from "src/utils/pagination";
+import { generateSlug } from "src/utils/slug";
 
 
 @Injectable()
@@ -16,8 +17,15 @@ export class CategoriesRepository implements IRepository<CategoriesResDto> {
     constructor(private prisma: PrismaService) {}
 
     async create(createDto: CreateCategoryDto): Promise<CategoriesResDto> {
+
+        const {title, description, status} = createDto
         const category = await this.prisma.categories.create({
-            data: createDto
+            data: {
+                title,
+                description,
+                status,
+                slug: generateSlug(title)
+            }
         }) 
         return plainToInstance(CategoriesResDto, category)
     }

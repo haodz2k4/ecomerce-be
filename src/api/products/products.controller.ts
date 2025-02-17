@@ -62,6 +62,7 @@ export class ProductsController {
   }
 
   @Patch(':id')
+  @Public()
   @ResponseMessage('Update product')
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) :Promise<ProductResDto> {
     return this.productsService.update(id, updateProductDto);
