@@ -29,6 +29,12 @@ export class CategoriesController {
     return this.categoriesService.findOne(id);
   }
 
+  @Get('slug/:slug') 
+  @Public()
+  getProductBySlug(@Param('slug') slug: string) {
+    return this.categoriesService.getOneBySlug(slug)
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) :Promise<CategoriesResDto> {
     return this.categoriesService.update(id, updateCategoryDto);

@@ -88,7 +88,16 @@ export class CategoriesRepository implements IRepository<CategoriesResDto> {
             throw new NotFoundException("Category is not found");
         }
         return plainToInstance(CategoriesResDto, category);
-    }   
+    } 
+    
+    async getOneBySlug(slug: string) :Promise<CategoriesResDto> {
+        const category = await this.prisma.categories.findUnique({where: {slug}});
+        if(!category) {
+            throw new NotFoundException("Category is not found")
+        }
+        return plainToInstance(CategoriesResDto, category)
+
+    }
 
     async update(id: string, updateDto: UpdateCategoryDto): Promise<CategoriesResDto> {
         await this.getOneById(id);

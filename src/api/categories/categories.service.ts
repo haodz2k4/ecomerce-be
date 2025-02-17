@@ -23,6 +23,10 @@ export class CategoriesService {
     return this.categoriesRepository.getOneById(id)
   }
 
+  getOneBySlug(slug: string) :Promise<CategoriesResDto> {
+    return this.categoriesRepository.getOneBySlug(slug);
+  }
+
   update(id: string, updateCategoryDto: UpdateCategoryDto) {
     return this.categoriesRepository.update(id, updateCategoryDto)
   }
