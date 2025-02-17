@@ -26,6 +26,7 @@ export class AuthController {
     }
 
     @Post('logout')
+    @HttpCode(HttpStatus.OK)
     logout(@User() user: PayloadType) :Promise<void> {
         const {sessionId} = user
         return this.authService.logout(sessionId)
@@ -49,6 +50,7 @@ export class AuthController {
     }
 
     @Public()
+    @HttpCode(HttpStatus.OK)
     @Post('forgot')
     @ResponseMessage('Forgot password')
     forgotPassword(@Body('email') email: string) :Promise<void> {
@@ -57,12 +59,16 @@ export class AuthController {
 
     @Post('verify-otp')
     @Public()
+    @ResponseMessage('Verify otp')
+    @HttpCode(HttpStatus.OK)
     @ResponseMessage('Verify Otp')
     verifyOtp(@Body() verifyDto: VerifyDto) :Promise<VerifyResDto> {
         return this.authService.verifyOtp(verifyDto)
     }
 
     @Public()
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Reset password')
     @Post('reset-password')
     resetPassword(@Body() resetPasswordDto: ResetPasswordDto ) :Promise<void> {
         return this.authService.resetPassword(resetPasswordDto)

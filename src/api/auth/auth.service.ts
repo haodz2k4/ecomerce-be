@@ -57,8 +57,6 @@ export class AuthService {
             throw new NotFoundException("User is not found");
         }
         const currentOtp = await this.cacheManager.get(generateCacheKey(CacheKeyEnum.FORGOT_PASSWORD, user.id));
-        console.log("Current",currentOtp)
-        console.log("req",otp)
         if(otp !== currentOtp || !currentOtp) {
             throw new NotFoundException("Invalid otp code");
         }
@@ -96,12 +94,12 @@ export class AuthService {
                 this.cacheManager.set(
                     generateCacheKey(CacheKeyEnum.FORGOT_PASSWORD, user.id), 
                     otp, 
-                    300000
+                    parseInt(ms(this.configService.get('JWT_RESET_EXPIRES')))
                 ),
                 this.mailService.sendOtp(email, user.fullName, otp)
             ]
         )
-        console.log("GEnerate", await this.cacheManager.get(generateCacheKey(CacheKeyEnum.FORGOT_PASSWORD, email)))
+        
     }
 
     async logout(sessionId: string) :Promise<void> {
