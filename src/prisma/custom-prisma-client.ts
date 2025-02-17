@@ -1,26 +1,12 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { generateSlug } from 'src/utils/slug';
 
 export function softDeleteExtension(prisma: PrismaClient) {
 
-  const modelsWithSoftDelete = ['Users', 'Products'];
+  const modelsWithSoftDelete = ['Users', 'Products','Categories', 'Roles'];
 
   return prisma.$extends({
-    model: {
-      $allModels: {
-        async softDelete<T>(this: T, where: Prisma.Args<T, 'update'>['where']) {
-          const modelName = (this as any)._modelMeta.name;
-          if (!modelsWithSoftDelete.includes(modelName)) {
-            throw new Error(`Model ${modelName} not support soft remove`);
-          }
-          return (this as any).update({
-            where,
-            data: { deletedAt: new Date() },
-          });
-        },
-      },
-    },
     query: {
       $allModels: {
         async findMany({ model, args, query }) {
@@ -35,6 +21,39 @@ export function softDeleteExtension(prisma: PrismaClient) {
           }
           return query(args);
         },
+        async findFirstOrThrow({ model, args, query }) {
+          if (modelsWithSoftDelete.includes(model)) {
+            args.where = { ...args.where, deletedAt: null };
+          }
+          return query(args);
+        },
+        async findUnique({model, args, query}) {
+          if (modelsWithSoftDelete.includes(model)) {
+            args.where = { ...args.where, deletedAt: null };
+          }
+          return query(args);
+        },
+        async findUniqueOrThrow({ model, args, query }) {
+          if (modelsWithSoftDelete.includes(model)) {
+            args.where = { ...args.where, deletedAt: null };
+          }
+          return query(args);
+        },
+        async delete({ model, args, query }) {
+          if (modelsWithSoftDelete.includes(model)) {
+            return prisma[model].update({
+              where: args.where,
+              data: { deletedAt: new Date() },
+            });
+          }
+          return query(args); 
+        }
+        
+        
+        
+        
+        
+        
       },
       users: {
         async create({ args, query }) {

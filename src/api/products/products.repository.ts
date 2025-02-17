@@ -194,8 +194,9 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         return plainToInstance(ProductResDto, product)
     }
     
-    remove(id: unknown): Promise<void> {
-        throw new Error("Method not implemented.");
+    async remove(id: string): Promise<void> {
+        await this.getOneById(id);
+        await this.prisma.products.delete({where: {id}})
     }
 
     async removeMultiImage(productId: string, ids: number[]) :Promise<void> {

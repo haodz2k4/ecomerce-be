@@ -105,8 +105,9 @@ export class CategoriesRepository implements IRepository<CategoriesResDto> {
         return plainToInstance(CategoriesResDto, category);
     }
 
-    remove(id: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    async remove(id: string): Promise<void> {
+        await this.getOneById(id);
+        await this.prisma.categories.delete({where: {id}})
     }
 
 
