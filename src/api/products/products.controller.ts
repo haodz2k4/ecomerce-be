@@ -24,6 +24,7 @@ export class ProductsController {
   }
 
   @Post()
+  @Public()
   @ResponseMessage('Create product')
   create(@Body() createProductDto: CreateProductDto) :Promise<ProductResDto> {
     return this.productsService.create(createProductDto);
