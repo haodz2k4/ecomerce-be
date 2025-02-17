@@ -17,6 +17,8 @@ import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { generateCacheKey } from 'src/utils/cache.util';
 import { CacheKeyEnum } from 'src/constants/cache.constant';
 import { generateRandomNumber } from 'src/utils/generate.util';
+import { VerifyDto } from './dto/verify.dto';
+import { VerifyResDto } from './dto/verify-res.dto';
 
 @Injectable()
 export class AuthService {
@@ -46,6 +48,23 @@ export class AuthService {
         return user;
     }
 
+    async verifyOtp(verifyOtp: VerifyDto) :Promise<VerifyResDto> {
+        const {email, otp} = verifyOtp;
+        const user = await this.usersService.getUserByEmail(email);
+        if(!user) {
+            throw new NotFoundException("User is not found");
+        }
+        const currentOtp = await this.cacheManager.get(generateCacheKey(CacheKeyEnum.FORGOT_PASSWORD, user.id));
+        if(otp !== currentOtp || !currentOtp) {
+            throw new NotFoundException("Invalid otp code");
+        }
+        const token = await this.generateResetToken(user.id, user.roleId)
+        return plainToInstance(VerifyResDto, {
+            id: user.id,
+            token
+        })
+    }
+
     async login(loginDto: LoginDto) :Promise<LoginResDto> {
         const {email, password} = loginDto
         const user = await this.validateUser(email, password);
@@ -67,11 +86,35 @@ export class AuthService {
         if(!user) {
             throw new NotFoundException("Email is not exists");
         }
-        await this.mailService.sendOtp(email, user.fullName, generateRandomNumber(6))
+        const otp = generateRandomNumber(6);
+        await Promise.all(
+            [
+                this.cacheManager.set(
+                    generateCacheKey(CacheKeyEnum.FORGOT_PASSWORD, user.id), 
+                    otp, 
+                    parseInt(ms(this.configService.get('JWT_RESET_EXPIRES')))
+                ),
+                this.mailService.sendOtp(email, user.fullName, otp)
+            ]
+        )
     }
 
     async logout(sessionId: string) :Promise<void> {
         await this.cacheManager.set(generateCacheKey(CacheKeyEnum.REFRESH_BLACKLIST, sessionId), true)
+    }
+
+    async generateResetToken(id: string, roleId: string) :Promise<string> {
+
+        return await this.jwtService.signAsync(
+            {
+                id,
+                roleId
+            },
+            {
+                secret: this.configService.get<string>('JWT_RESET_SECRET'),
+                expiresIn: this.configService.get<string>('JWT_RESET_EXPIRES')
+            }
+        )
     }
 
     async generateAuthToken(id: string, roleId: string, sessionId: string) {

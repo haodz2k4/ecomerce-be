@@ -2,7 +2,6 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Queue } from 'bullmq';
-import { template } from 'handlebars';
 import { JobEnum } from 'src/constants/job.enum';
 
 @Injectable()

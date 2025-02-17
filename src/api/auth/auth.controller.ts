@@ -8,6 +8,8 @@ import { RegisterDto } from './dto/register.dto';
 import { RegisterResDto } from './dto/register-res.dto';
 import { User } from 'src/decorator/user.decorator';
 import { PayloadType } from './types/payload.type';
+import { VerifyDto } from './dto/verify.dto';
+import { VerifyResDto } from './dto/verify-res.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -51,4 +53,13 @@ export class AuthController {
     forgotPassword(@Body('email') email: string) :Promise<void> {
         return this.authService.forgotPassword(email)
     }
+
+    @Post('verify-otp')
+    @Public()
+    @ResponseMessage('Verify Otp')
+    verifyOtp(@Body() verifyDto: VerifyDto) :Promise<VerifyResDto> {
+        return this.authService.verifyOtp(verifyDto)
+    }
+
+    
 }
