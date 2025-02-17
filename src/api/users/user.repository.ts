@@ -142,6 +142,12 @@ export class UsersRepository implements IRepository<UserResDto>{
         return plainToInstance(UserResDto, user);
     }
 
+    async updatePassword(id: string, password: string): Promise<UserResDto> {
+        await this.getOneById(id);
+        const user = await this.prisma.users.update({where: {id}, data: {password}});
+        return plainToInstance(UserResDto, user)
+    }
+
     async update(id: string, updateUserDto: UpdateUserDto): Promise<UserResDto> {
         await this.getOneById(id)
         const user = await this.prisma.users.update({where: {id}, data: updateUserDto});

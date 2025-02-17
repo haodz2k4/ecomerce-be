@@ -19,6 +19,8 @@ import { CacheKeyEnum } from 'src/constants/cache.constant';
 import { generateRandomNumber } from 'src/utils/generate.util';
 import { VerifyDto } from './dto/verify.dto';
 import { VerifyResDto } from './dto/verify-res.dto';
+import { ResetPayload } from './types/reset-payload.type';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -55,6 +57,8 @@ export class AuthService {
             throw new NotFoundException("User is not found");
         }
         const currentOtp = await this.cacheManager.get(generateCacheKey(CacheKeyEnum.FORGOT_PASSWORD, user.id));
+        console.log("Current",currentOtp)
+        console.log("req",otp)
         if(otp !== currentOtp || !currentOtp) {
             throw new NotFoundException("Invalid otp code");
         }
@@ -92,23 +96,36 @@ export class AuthService {
                 this.cacheManager.set(
                     generateCacheKey(CacheKeyEnum.FORGOT_PASSWORD, user.id), 
                     otp, 
-                    parseInt(ms(this.configService.get('JWT_RESET_EXPIRES')))
+                    300000
                 ),
                 this.mailService.sendOtp(email, user.fullName, otp)
             ]
         )
+        console.log("GEnerate", await this.cacheManager.get(generateCacheKey(CacheKeyEnum.FORGOT_PASSWORD, email)))
     }
 
     async logout(sessionId: string) :Promise<void> {
         await this.cacheManager.set(generateCacheKey(CacheKeyEnum.REFRESH_BLACKLIST, sessionId), true)
     }
 
-    async generateResetToken(id: string, roleId: string) :Promise<string> {
+    async resetPassword(resetPasswordDto: ResetPasswordDto) :Promise<void> {
+        const {token, password} = resetPasswordDto;
+        const payload = await this.jwtService.verifyAsync(token, {
+            secret: this.configService.get('JWT_RESET_SECRET')
+        });
+        const {id} = payload as ResetPayload;
+        await this.usersService.updatePassword(id, password);
+        
+
+        
+    }
+
+    async generateResetToken(id: string, email: string) :Promise<string> {
 
         return await this.jwtService.signAsync(
             {
                 id,
-                roleId
+                email
             },
             {
                 secret: this.configService.get<string>('JWT_RESET_SECRET'),

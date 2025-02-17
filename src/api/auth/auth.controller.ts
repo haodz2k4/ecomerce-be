@@ -10,6 +10,7 @@ import { User } from 'src/decorator/user.decorator';
 import { PayloadType } from './types/payload.type';
 import { VerifyDto } from './dto/verify.dto';
 import { VerifyResDto } from './dto/verify-res.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -61,5 +62,10 @@ export class AuthController {
         return this.authService.verifyOtp(verifyDto)
     }
 
+    @Public()
+    @Post('reset-password')
+    resetPassword(@Body() resetPasswordDto: ResetPasswordDto ) :Promise<void> {
+        return this.authService.resetPassword(resetPasswordDto)
+    }
     
 }

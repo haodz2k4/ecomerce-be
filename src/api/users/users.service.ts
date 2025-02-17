@@ -24,6 +24,10 @@ export class UsersService {
     return this.userRepository.getMany(queryUserDto);
   }
 
+  updatePassword(id: string, password: string) : Promise<UserResDto> {
+    return this.userRepository.updatePassword(id, password)
+  }
+
   findOne(id: string): Promise<UserResDto> {
     return this.userRepository.getOneById(id)
   }
