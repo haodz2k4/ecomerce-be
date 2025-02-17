@@ -1,4 +1,4 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -16,6 +16,7 @@ import { MailService } from 'src/mail/mail.service';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { generateCacheKey } from 'src/utils/cache.util';
 import { CacheKeyEnum } from 'src/constants/cache.constant';
+import { generateRandomNumber } from 'src/utils/generate.util';
 
 @Injectable()
 export class AuthService {
@@ -58,6 +59,15 @@ export class AuthService {
             ...token,
             expiresIn: expiresIn / 1000
         })
+    }
+
+    async forgotPassword(email: string) {
+        const user = await this.usersService.getUserByEmail(email);
+        
+        if(!user) {
+            throw new NotFoundException("Email is not exists");
+        }
+        await this.mailService.sendOtp(email, user.fullName, generateRandomNumber(6))
     }
 
     async logout(sessionId: string) :Promise<void> {

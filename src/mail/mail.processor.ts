@@ -19,6 +19,9 @@ export class MailProcessor extends WorkerHost {
                 case JobEnum.SEND_VERIFY_EMAIL:
                      await this.mailerService.sendMail(data);
                      break;
+                case JobEnum.SEND_OTP: 
+                    await this.mailerService.sendMail(data)
+                    break;
                 default:
                     throw new Error("Job name is invalid")
             }

@@ -44,4 +44,11 @@ export class AuthController {
     verify(@Query('token') token: string ) :Promise<void> {
         return this.authService.verify(token)
     }
+
+    @Public()
+    @Post('forgot')
+    @ResponseMessage('Forgot password')
+    forgotPassword(@Body('email') email: string) :Promise<void> {
+        return this.authService.forgotPassword(email)
+    }
 }

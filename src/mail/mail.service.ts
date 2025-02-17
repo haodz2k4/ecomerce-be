@@ -2,6 +2,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Queue } from 'bullmq';
+import { template } from 'handlebars';
 import { JobEnum } from 'src/constants/job.enum';
 
 @Injectable()
@@ -21,6 +22,19 @@ export class MailService {
             context: {
                 name: fullName,
                 url
+            }
+        })
+    }
+
+    async sendOtp(to: string, fullName: string, otp: string) {
+        console.log(otp)
+        await this.mailQueue.add(JobEnum.SEND_OTP,  {
+            to,
+            suject: 'FORGOT PASSWORD',
+            template: './send-otp',
+            context: {
+                name: fullName,
+                otp
             }
         })
     }
