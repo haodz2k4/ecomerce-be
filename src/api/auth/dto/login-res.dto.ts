@@ -1,10 +1,15 @@
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
+import { UserResDto } from "src/api/users/dto/user-res.dto";
 
 
 export class LoginResDto {
 
     @Expose()
     id: string;
+
+    @Expose()
+    @Type(() => UserResDto)
+    user: UserResDto;
 
     @Expose()
     roleId: string;

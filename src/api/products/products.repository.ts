@@ -44,7 +44,8 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
             page,
             limit,
             sortBy,
-            sortOrder
+            sortOrder,
+            categorySlug
         } = queryDto;
         const skip = queryDto.getSkip()
         const where: Record<string, unknown> = {};
@@ -87,6 +88,13 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                 price: rangePrice
             })
         }
+        if(categorySlug) {
+            filters.push({
+                category: {
+                    slug: categorySlug
+                }
+            })
+        }
 
         const rangePercentage = queryDto.getRangePercentage()
         if(rangePercentage) {
@@ -97,6 +105,7 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         if(filters.length > 0) {
             where["AND"] = filters
         }
+        
         const [products, total] = await Promise.all(
             [
                 this.prisma.products.findMany({
@@ -164,7 +173,8 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                     select: {
                         url: true
                     }
-                }
+                },
+                category: true
             }
         })
         if(!product) {

@@ -9,6 +9,7 @@ import { QueryCategoryDto } from './dto/query-category.dto';
 
 
 @Controller('categories')
+@Public()
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 

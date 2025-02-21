@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsDate, IsEmail, IsEnum, IsOptional, IsString, IsStrongPassword } from "class-validator";
 import { UserGenderEnum, UserStatusEnum } from "src/constants/entity.constant";
 
@@ -25,6 +26,7 @@ export class CreateUserDto {
     roleId: string;
 
     @IsDate()
+    @Type(() => Date)
     @IsOptional()
     birthDate?: Date;
 }

@@ -8,5 +8,5 @@ export class UpdateUserDto extends PartialType(
 {
     @IsOptional()
     @IsBoolean()
-    verified: boolean
+    verified?: boolean
 }

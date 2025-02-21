@@ -70,6 +70,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @Public()
   @ResponseMessage('Remove product')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) :Promise<void> {
