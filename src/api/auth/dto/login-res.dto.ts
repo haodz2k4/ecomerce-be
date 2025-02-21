@@ -8,10 +8,6 @@ export class LoginResDto {
     id: string;
 
     @Expose()
-    @Type(() => UserResDto)
-    user: UserResDto;
-
-    @Expose()
     roleId: string;
 
     @Expose()

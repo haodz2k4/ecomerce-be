@@ -78,8 +78,7 @@ export class AuthService {
             id,
             roleId,
             ...token,
-            expiresIn: expiresIn / 1000,
-            user
+            expiresIn: expiresIn / 1000
         })
     }
 
