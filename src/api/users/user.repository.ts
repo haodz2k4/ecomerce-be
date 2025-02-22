@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Body, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { IRepository } from "src/common/interface/repository.interface";
 import { UserResDto } from "./dto/user-res.dto";
@@ -9,7 +9,8 @@ import { QueryUserDto } from "./dto/query-user.dto";
 import { Pagination } from "src/utils/pagination";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Sessions, Users } from "@prisma/client";
-
+import { ChangePasswordUserDto } from "./dto/change-password-user.dto";
+import { verifyPassword } from "src/utils/password.util";
 
 
 
@@ -24,6 +25,16 @@ export class UsersRepository implements IRepository<UserResDto>{
             userId
         }})
     }
+
+    async changePassword(id: string, @Body() changePasswordUserDto: ChangePasswordUserDto) :Promise<void> {
+        const {currentPassword, newPassword} = changePasswordUserDto;
+        const user = await this.prisma.users.findUnique({where: {id}});
+        const isTrue = await verifyPassword(currentPassword, user.password);
+        if(!isTrue) {
+            throw new UnauthorizedException("Password is invalid")
+        }
+        await this.prisma.users.update({where: {id}, data: {password: newPassword}});
+      }
 
     async create(createUserDto: CreateUserDto): Promise<UserResDto> {
         const {email} = createUserDto;
