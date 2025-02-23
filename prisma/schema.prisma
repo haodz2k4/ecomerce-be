@@ -98,7 +98,8 @@ model Products {
   thumbnail String? 
   slug String @unique
 
-  images Products_images[]
+  images Products_images[] 
+  inventories Inventories[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -127,4 +128,16 @@ model Categories {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
+}
+
+model Inventories {
+  id String @id @default(uuid())
+  productId String 
+  product Products @relation(fields: [productId], references: [id])
+  supplier String 
+  address String 
+  quantity Int 
+  createdAt DateTime 
+  updatedAt DateTime 
+  deletedAt DateTime
 }
