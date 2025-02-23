@@ -9,6 +9,7 @@ import { QueryProductDto } from './dto/query-product.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UploadProduct } from './interface/upload-product';
 import { ResponseMessage } from 'src/decorator/response-message.decorator';
+import { UploadProductResDto } from './dto/upload-product-res.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -30,15 +31,14 @@ export class ProductsController {
     return this.productsService.create(createProductDto);
   }
 
-  @Post(':id/upload') 
+  @Post('upload') 
   @ResponseMessage('Upload thumbnail and multi images')
   @UseInterceptors(FileFieldsInterceptor([
     {name: 'thumbnail', maxCount: 1},
     {name: 'images', maxCount: 5}
   ]))
-  async uploadImage(@UploadedFiles() uploadProductDto: UploadProduct, @Param('id') id: string) :Promise<void> {
-    await this.productsService.upload(id, uploadProductDto)
-    
+  async uploadImage(@UploadedFiles() uploadProductDto: UploadProduct) :Promise<UploadProductResDto> {
+    return this.productsService.upload(uploadProductDto)
   }
 
   @Get()

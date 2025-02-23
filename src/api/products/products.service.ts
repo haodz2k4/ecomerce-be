@@ -7,6 +7,8 @@ import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { UploadProduct } from './interface/upload-product';
+import { plainToInstance } from 'class-transformer';
+import { UploadProductResDto } from './dto/upload-product-res.dto';
 
 @Injectable()
 export class ProductsService {
@@ -28,14 +30,15 @@ export class ProductsService {
     return this.productsRepository.getOneById(id)
   }
 
-  async upload(id: string, uploadProductDto: UploadProduct): Promise<void> {
+  async upload(uploadProductDto: UploadProduct): Promise<UploadProductResDto> {
     const [thumbnails, images] = await Promise.all([
       this.cloudinaryService.uploadMulti(uploadProductDto.thumbnail),
       this.cloudinaryService.uploadMulti(uploadProductDto.images)
     ])
-    const thumbnail = thumbnails[0].secure_url;
-    const urls: string[] = images.map((item) => item.secure_url)
-    this.productsRepository.updateProductImage(id,thumbnail, urls )
+    return plainToInstance(UploadProductResDto, {
+      thumbnail: thumbnails[0],
+      images
+    })
   }
 
   getOneBySlug(slug: string) :Promise<ProductResDto> {

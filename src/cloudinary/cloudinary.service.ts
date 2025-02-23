@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { UploadApiErrorResponse, UploadApiResponse, v2 } from 'cloudinary';
 import * as toStream from "buffer-to-stream";
 @Injectable()
-
 export class CloudinaryService {
 
     async uploadSingle( file: Express.Multer.File ): Promise<UploadApiResponse | UploadApiErrorResponse> {

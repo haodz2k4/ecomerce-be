@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsEnum, IsNumber, IsOptional, IsString, IsUUID, Max, Min } from "class-validator";
+import { IsArray, IsEnum, IsNumber, IsOptional, IsString, IsUUID, Max, Min } from "class-validator";
 import { ProductStatusEnum } from "src/constants/entity.constant";
 
 
@@ -14,6 +14,14 @@ export class CreateProductDto {
     @IsString()
     @IsOptional()
     description: string;
+
+    @IsString()
+    @IsOptional()
+    thumbnail: string;
+
+    @IsArray()
+    @IsOptional()
+    images: string[];
 
     @IsNumber()
     @IsOptional()
