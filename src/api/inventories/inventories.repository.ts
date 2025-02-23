@@ -8,7 +8,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { InventoryResDto } from "./dto/inventory-res.dto";
 import { plainToInstance } from "class-transformer";
 import { Pagination } from "src/utils/pagination";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 
 
 @Injectable()
@@ -70,14 +70,27 @@ export class InventoriesRepository implements IRepository<InventoryResDto> {
     async getTotalDocument(where?: Record<string, unknown>) :Promise<number> {
         return await this.prisma.inventories.count({where})
     }
-    getOneById(id: string): Promise<InventoryResDto> {
-        throw new Error("Method not implemented.");
+    async getOneById(id: string): Promise<InventoryResDto> {
+        const inventory = await this.prisma.inventories.findUnique({
+            where: {id}
+        })
+        if(!inventory) {
+            throw new NotFoundException("Inventory is not found");
+        }
+        return plainToInstance(InventoryResDto, inventory)
     }
-    update(id: string, updateDto: UpdateInventoryDto): Promise<InventoryResDto> {
-        throw new Error("Method not implemented.");
+    async  update(id: string, updateDto: UpdateInventoryDto): Promise<InventoryResDto> {
+        await this.getOneById(id)
+        const inventory = await this.prisma.inventories.update({
+            where: {id},
+            data: updateDto
+        })
+
+        return plainToInstance(InventoryResDto, inventory)
     }
-    remove(id: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    async remove(id: string): Promise<void> {
+        await this.getOneById(id);
+        await this.prisma.inventories.delete({where: {id}});
     }
 
 }
