@@ -137,7 +137,7 @@ model Inventories {
   supplier String 
   address String 
   quantity Int 
-  createdAt DateTime 
-  updatedAt DateTime 
-  deletedAt DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
 }

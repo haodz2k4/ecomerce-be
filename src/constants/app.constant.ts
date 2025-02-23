@@ -1,5 +1,7 @@
 
 export const RESPONSE_MESSAGE = 'response_message';
+export const MIN_QUANTITY = 0;
+export const MAX_QUANTITY = 100000;
 
 export enum SortOrderEnum {
     ASC = 'asc',
