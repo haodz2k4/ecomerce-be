@@ -12,8 +12,10 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 import { CategoriesModule } from './api/categories/categories.module';
+import { InventoriesModule } from './api/inventories/inventories.module';
 @Module({
   imports: [
+    InventoriesModule,
     PrismaModule,
     ConfigModule.forRoot({
       isGlobal: true
