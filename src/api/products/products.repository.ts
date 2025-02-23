@@ -119,7 +119,12 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                                 url: true
                             }
                         },
-                        category: true
+                        category: true,
+                        inventories: {
+                            select: {
+                                quantity: true
+                            }
+                        }
                     }
                 }),
                 this.totalDocument(where)
@@ -142,7 +147,12 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                         url: true
                     }
                 },
-                category: true
+                category: true,
+                inventories: {
+                    select: {
+                        quantity: true
+                    }
+                }
             }
         });
         if(!product) {
@@ -174,7 +184,12 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                         url: true
                     }
                 },
-                category: true
+                category: true,
+                inventories: {
+                    select: {
+                        quantity: true
+                    }
+                }
             }
         })
         if(!product) {
@@ -195,7 +210,12 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                         url: true
                     }
                 },
-                category: true
+                category: true,
+                inventories: {
+                    select: {
+                        quantity: true
+                    }
+                }
             }
         });
         if(!product) {

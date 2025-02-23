@@ -8,9 +8,10 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { InventoryResDto } from "./dto/inventory-res.dto";
 import { plainToInstance } from "class-transformer";
 import { Pagination } from "src/utils/pagination";
+import { Injectable } from "@nestjs/common";
 
 
-
+@Injectable()
 export class InventoriesRepository implements IRepository<InventoryResDto> {
     
     constructor(private prisma: PrismaService) {};

@@ -4,7 +4,7 @@ import { generateSlug } from 'src/utils/slug';
 
 export function softDeleteExtension(prisma: PrismaClient) {
 
-  const modelsWithSoftDelete = ['Users', 'Products','Categories', 'Roles'];
+  const modelsWithSoftDelete = ['Users', 'Products','Categories', 'Roles', 'Inventories'];
 
   return prisma.$extends({
     query: {
@@ -56,6 +56,10 @@ export function softDeleteExtension(prisma: PrismaClient) {
         
       },
       users: {
+        async findMany({args, query}) {
+          
+          return query(args)
+        },
         async create({ args, query }) {
           args.data.password = await hash(args.data.password, 10);
           
