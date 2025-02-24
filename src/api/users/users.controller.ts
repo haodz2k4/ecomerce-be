@@ -8,8 +8,6 @@ import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { ResponseMessage } from 'src/decorator/response-message.decorator';
 import { User } from 'src/decorator/user.decorator';
 import { UpdateCurrentUserDto } from './dto/update-current-user.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadResDto } from './dto/upload-res.dto';
 import { ChangePasswordUserDto } from './dto/change-password-user.dto';
 
 @Controller('users')
@@ -26,14 +24,6 @@ export class UsersController {
   @ResponseMessage('Change password successfully')
   changePassword(@User('id') id: string, @Body() changePasswordUserDto: ChangePasswordUserDto) :Promise<void> {
     return this.usersService.changePassword(id, changePasswordUserDto)
-  }
-  
-
-  @Post('upload')
-  @ResponseMessage('Upload avatar')
-  @UseInterceptors(FileInterceptor('avatar'))
-  async uploadAvatar(@User('id') id: string, @UploadedFile() file: Express.Multer.File): Promise<UploadResDto> {
-    return this.usersService.uploadAvatar(id,file)
   }
 
   @Get()

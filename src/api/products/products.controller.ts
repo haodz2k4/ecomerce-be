@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFiles, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -6,10 +6,7 @@ import { ProductResDto } from './dto/product-res.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { Public } from 'src/decorator/public.decorator';
 import { QueryProductDto } from './dto/query-product.dto';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { UploadProduct } from './interface/upload-product';
 import { ResponseMessage } from 'src/decorator/response-message.decorator';
-import { UploadProductResDto } from './dto/upload-product-res.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -29,16 +26,6 @@ export class ProductsController {
   @ResponseMessage('Create product')
   create(@Body() createProductDto: CreateProductDto) :Promise<ProductResDto> {
     return this.productsService.create(createProductDto);
-  }
-
-  @Post('upload') 
-  @ResponseMessage('Upload thumbnail and multi images')
-  @UseInterceptors(FileFieldsInterceptor([
-    {name: 'thumbnail', maxCount: 1},
-    {name: 'images', maxCount: 5}
-  ]))
-  async uploadImage(@UploadedFiles() uploadProductDto: UploadProduct) :Promise<UploadProductResDto> {
-    return this.productsService.upload(uploadProductDto)
   }
 
   @Get()

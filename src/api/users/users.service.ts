@@ -7,8 +7,6 @@ import { QueryUserDto } from './dto/query-user.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { Sessions, Users } from '@prisma/client';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
-import { plainToInstance } from 'class-transformer';
-import { UploadResDto } from './dto/upload-res.dto';
 import { ChangePasswordUserDto } from './dto/change-password-user.dto';
 
 @Injectable()
@@ -25,14 +23,6 @@ export class UsersService {
 
   async changePassword(id: string, @Body() changePasswordUserDto: ChangePasswordUserDto) :Promise<void> {
     return this.userRepository.changePassword(id, changePasswordUserDto)
-  }
-
-  async uploadAvatar(id: string,file: Express.Multer.File) {
-    const data = await this.cloudinaryService.uploadSingle(file);
-    await this.userRepository.update(id, {
-      avatar: data.secure_url
-    })
-    return plainToInstance(UploadResDto, {avatar: data.secure_url})
   }
 
   create(createUserDto: CreateUserDto): Promise<UserResDto> {
