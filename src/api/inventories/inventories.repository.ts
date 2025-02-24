@@ -17,7 +17,9 @@ export class InventoriesRepository implements IRepository<InventoryResDto> {
     constructor(private prisma: PrismaService) {};
 
     async create(createDto: CreateInventoryDto): Promise<InventoryResDto> {
-        const inventory = await this.prisma.inventories.create({data: createDto});
+        const inventory = await this.prisma.inventories.create({data: createDto, include: {
+            product: true
+        }});
         return plainToInstance(InventoryResDto, inventory);
     }
     async getMany(queryDto?: QueryInventoryDto): Promise<PaginatedResDto<InventoryResDto>> {
@@ -58,11 +60,13 @@ export class InventoriesRepository implements IRepository<InventoryResDto> {
                     [sortBy]: sortOrder
                 },
                 take: limit,
-                skip
+                skip,
+                include: {
+                    product: true
+                }
             }),
             this.getTotalDocument()
         ])
-
         const pagination = new Pagination(page, limit, total);
         return new PaginatedResDto(plainToInstance(InventoryResDto, inventories), pagination);
     }
@@ -72,7 +76,10 @@ export class InventoriesRepository implements IRepository<InventoryResDto> {
     }
     async getOneById(id: string): Promise<InventoryResDto> {
         const inventory = await this.prisma.inventories.findUnique({
-            where: {id}
+            where: {id},
+            include: {
+                product: true
+            }
         })
         if(!inventory) {
             throw new NotFoundException("Inventory is not found");
@@ -83,7 +90,10 @@ export class InventoriesRepository implements IRepository<InventoryResDto> {
         await this.getOneById(id)
         const inventory = await this.prisma.inventories.update({
             where: {id},
-            data: updateDto
+            data: updateDto,
+            include: {
+                product: true
+            }
         })
 
         return plainToInstance(InventoryResDto, inventory)

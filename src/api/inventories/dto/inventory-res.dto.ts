@@ -1,4 +1,5 @@
-import { Exclude, Expose } from "class-transformer";
+import { Exclude, Expose, Type } from "class-transformer";
+import { ProductResDto } from "src/api/products/dto/product-res.dto";
 
 @Exclude()
 export class InventoryResDto {
@@ -13,7 +14,8 @@ export class InventoryResDto {
     address: string;
 
     @Expose()
-    productId: string;
+    @Type(() => ProductResDto)
+    product: string;
 
     @Expose()
     quantity: number;

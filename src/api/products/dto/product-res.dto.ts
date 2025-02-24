@@ -20,7 +20,7 @@ export class ProductResDto {
         sum: value.reduce((sum, item) => sum + item.quantity, 0),
         total: value.length
     }))
-    inventories: number;
+    inventories?: Record<string, unknown>;
 
     @Expose()
     description: string;
