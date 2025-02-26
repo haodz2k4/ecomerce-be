@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsOptional, IsString, IsUrl } from "class-validator";
 import { CategoryStatusEnum } from "src/constants/entity.constant";
 
 export class CreateCategoryDto {
@@ -9,6 +9,10 @@ export class CreateCategoryDto {
     @IsString()
     @IsOptional()
     description?: string;
+
+    @IsUrl()
+    @IsOptional()
+    thumbnail: string;
 
     @IsOptional()
     @IsEnum(CategoryStatusEnum)

@@ -14,6 +14,10 @@ export class CreateUserDto {
     @IsStrongPassword()
     password: string;
 
+    @IsString()
+    @IsOptional()
+    avatar?: string;
+
     @IsEnum(UserGenderEnum)
     @IsOptional()
     gender?: UserGenderEnum;

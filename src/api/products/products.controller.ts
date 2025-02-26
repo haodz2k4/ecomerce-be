@@ -8,6 +8,7 @@ import { Public } from 'src/decorator/public.decorator';
 import { QueryProductDto } from './dto/query-product.dto';
 import { ResponseMessage } from 'src/decorator/response-message.decorator';
 
+@Public()
 @Controller('products')
 export class ProductsController {
   constructor(

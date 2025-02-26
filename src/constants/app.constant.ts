@@ -8,7 +8,7 @@ export enum SortOrderEnum {
     DESC = 'desc'
 }
 
-
+export const DEFAULT_LIMIT = 20
 
 export const DefaultSortBy = 'createdAt'
 export const DefaultSortOrder = SortOrderEnum.DESC

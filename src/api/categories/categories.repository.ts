@@ -18,13 +18,14 @@ export class CategoriesRepository implements IRepository<CategoriesResDto> {
 
     async create(createDto: CreateCategoryDto): Promise<CategoriesResDto> {
 
-        const {title, description, status} = createDto
+        const {title, description, status, thumbnail} = createDto
         const category = await this.prisma.categories.create({
             data: {
                 title,
                 description,
                 status,
-                slug: generateSlug(title)
+                slug: generateSlug(title),
+                thumbnail
             }
         }) 
         return plainToInstance(CategoriesResDto, category)

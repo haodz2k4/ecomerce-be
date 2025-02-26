@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsDate, IsEnum, IsNumber, IsOptional, IsString, Min } from "class-validator";
-import { DefaultSortBy, DefaultSortOrder, SortOrderEnum } from "src/constants/app.constant";
+import { DEFAULT_LIMIT, DefaultSortBy, DefaultSortOrder, SortOrderEnum } from "src/constants/app.constant";
 import { IRange } from "../interface/app.interface";
 
 
@@ -20,7 +20,7 @@ export class QueryDto {
     @Type(() => Number)
     @Min(1)
     @IsOptional()
-    limit?: number = 100;
+    limit?: number = DEFAULT_LIMIT;
 
     @IsString()
     @IsOptional()

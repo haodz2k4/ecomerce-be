@@ -47,6 +47,12 @@ export function softDeleteExtension(prisma: PrismaClient) {
             });
           }
           return query(args); 
+        },
+        async count({ model, args, query }) {
+          if (modelsWithSoftDelete.includes(model)) {
+            args.where = { ...args.where, deletedAt: null };
+          }
+          return query(args);
         }
         
         

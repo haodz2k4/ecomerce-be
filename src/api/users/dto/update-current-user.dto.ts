@@ -6,7 +6,8 @@ export class UpdateCurrentUserDto extends PartialType(
     PickType(CreateUserDto,[
         'fullName',
         'gender',
-        'birthDate'
+        'birthDate',
+        'avatar'
     ])
 ) {
 

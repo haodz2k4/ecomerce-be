@@ -17,7 +17,7 @@ export class ProductResDto {
 
     @Expose()
     @Transform(({value = []}: {value: Inventories[]}) =>  ({
-        sum: value.reduce((sum, item) => sum + item.quantity, 0),
+        quantity: value.reduce((sum, item) => sum + item.quantity, 0),
         total: value.length
     }))
     inventories?: Record<string, unknown>;

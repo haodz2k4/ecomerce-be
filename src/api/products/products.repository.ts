@@ -17,7 +17,7 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
     constructor(private prisma: PrismaService) {}
     
     async create(createDto: CreateProductDto): Promise<ProductResDto> {
-        const {title, categoryId, description, discountPercentage, price, status, thumbnail} = createDto;
+        const {title, categoryId, description, discountPercentage, price, status, thumbnail, images} = createDto;
         const product = await this.prisma.products.create({
             data: {
                 title, 
