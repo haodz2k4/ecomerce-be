@@ -9,6 +9,7 @@ import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { UploadProduct } from './interface/upload-product';
 import { plainToInstance } from 'class-transformer';
 import { UploadProductResDto } from './dto/upload-product-res.dto';
+import { ProductStatsResDto } from './dto/product-stats-res.dto';
 
 @Injectable()
 export class ProductsService {
@@ -22,12 +23,18 @@ export class ProductsService {
     return this.productsRepository.create(createProductDto)
   }
 
+  
+
   findAll(queryProductDto?: QueryProductDto): Promise<PaginatedResDto<ProductResDto>> {
     return this.productsRepository.getMany(queryProductDto)
   }
 
   findOne(id: string) :Promise<ProductResDto>  {
     return this.productsRepository.getOneById(id)
+  }
+
+  async stats() : Promise<ProductStatsResDto> {
+    return this.productsRepository.stats()
   }
 
   async upload(uploadProductDto: UploadProduct): Promise<UploadProductResDto> {

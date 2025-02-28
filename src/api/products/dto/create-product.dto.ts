@@ -17,11 +17,11 @@ export class CreateProductDto {
 
     @IsString()
     @IsOptional()
-    thumbnail: string;
+    thumbnail?: string;
 
     @IsArray()
     @IsOptional()
-    images: string[];
+    images?: string[];
 
     @IsNumber()
     @IsOptional()

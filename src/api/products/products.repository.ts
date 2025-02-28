@@ -8,6 +8,9 @@ import { plainToInstance } from "class-transformer";
 import { QueryProductDto } from "./dto/query-product.dto";
 import { Pagination } from "src/utils/pagination";
 import { generateSlug } from "src/utils/slug";
+import { ProductStatusEnum } from "src/constants/entity.constant";
+import { ProductStatsResDto } from "./dto/product-stats-res.dto";
+import { UpdateProductDto } from "./dto/update-product.dto";
 
 
 
@@ -17,7 +20,7 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
     constructor(private prisma: PrismaService) {}
     
     async create(createDto: CreateProductDto): Promise<ProductResDto> {
-        const {title, categoryId, description, discountPercentage, price, status, thumbnail, images} = createDto;
+        const {title, categoryId, description, discountPercentage, price, status, thumbnail, images = []} = createDto;
         const product = await this.prisma.products.create({
             data: {
                 title, 
@@ -27,7 +30,10 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                 price, 
                 status,
                 thumbnail,
-                slug: generateSlug(title)
+                slug: generateSlug(title),
+                images: {
+                    create: images.map((item) => ({url: item}))
+                }
             },
             include: {
                 category: true
@@ -36,6 +42,16 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         return plainToInstance(ProductResDto, product)
     }
 
+    async stats():Promise<ProductStatsResDto> {
+        const [total, active, inactive] = await Promise.all([
+            this.prisma.products.count(),
+            this.prisma.products.count({where: {status: ProductStatusEnum.ACTIVE}}),
+            this.prisma.products.count({where: {status: ProductStatusEnum.INACTIVE}})
+        ])
+        return plainToInstance(ProductStatsResDto,{
+            total, active, inactive
+        })
+    }
     async getMany(queryDto?: QueryProductDto): Promise<PaginatedResDto<ProductResDto>> {
         
         const {
@@ -162,20 +178,6 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         return plainToInstance(ProductResDto, product);
     }
 
-    async updateProductImage(id: string, urlThumbnail: string, urlImages: string[]): Promise<void> {
-        await this.getOneById(id);
-        await this.prisma.products.update({
-            where: {id}, 
-            data: {thumbnail: urlThumbnail}
-        });
-        await this.prisma.products_images.createMany({
-            data: urlImages.map((item) => ({
-                url: item,
-                productId: id
-            }))
-        })
-    }
-
     async getOneBySlug(slug: string): Promise<ProductResDto> {
         const product = await this.prisma.products.findUnique({
             where: {slug},
@@ -200,11 +202,17 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         return plainToInstance(ProductResDto, product);
     }
 
-    async update(id: string, updateDto: unknown): Promise<ProductResDto> {
+    async update(id: string, updateDto: UpdateProductDto): Promise<ProductResDto> {
         await this.getOneById(id)
+        const {images = []} = updateDto
         const product = await this.prisma.products.update({
             where: {id}, 
-            data: updateDto,
+            data: {
+                ...updateDto,
+                images: {
+                    create: images.map((item) => ({url: item}))
+                }
+            },
             include: {
                 images: {
                     select: {

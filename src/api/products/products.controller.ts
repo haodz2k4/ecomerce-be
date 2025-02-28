@@ -7,6 +7,7 @@ import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { Public } from 'src/decorator/public.decorator';
 import { QueryProductDto } from './dto/query-product.dto';
 import { ResponseMessage } from 'src/decorator/response-message.decorator';
+import { ProductStatsResDto } from './dto/product-stats-res.dto';
 
 @Public()
 @Controller('products')
@@ -20,6 +21,11 @@ export class ProductsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   removeMultiImage(@Param('id') id: string, @Body('ids') ids: number[]) {
     return this.productsService.removeMultiImage(id, ids)
+  }
+
+  @Get('stats')
+  stats(): Promise<ProductStatsResDto> {
+    return this.productsService.stats()
   }
 
   @Post()

@@ -3,7 +3,9 @@ import { UploadService } from './upload.service';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { UploadSingleResDto } from './dto/upload-single-res.dto';
 import { UploadMultiResDto } from './dto/upload-multi-res.dto';
+import { Public } from 'src/decorator/public.decorator';
 
+@Public()
 @Controller('upload')
 export class UploadController {
   constructor(

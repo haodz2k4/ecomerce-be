@@ -7,7 +7,6 @@ import { UserResDto } from './dto/user-res.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { ResponseMessage } from 'src/decorator/response-message.decorator';
 import { User } from 'src/decorator/user.decorator';
-import { UpdateCurrentUserDto } from './dto/update-current-user.dto';
 import { ChangePasswordUserDto } from './dto/change-password-user.dto';
 
 @Controller('users')
@@ -36,12 +35,6 @@ export class UsersController {
   @ResponseMessage('Get current user')
   getCurrentUser(@User('id') id: string) {
     return this.usersService.findOne(id)
-  }
-
-  @Patch('me')
-  @ResponseMessage('Update current user')
-  updateCurrentUser(@User('id') id: string, @Body() updateCurrentUserDto: UpdateCurrentUserDto) {
-    return this.usersService.update(id, updateCurrentUserDto)
   }
 
   @Get(':id')

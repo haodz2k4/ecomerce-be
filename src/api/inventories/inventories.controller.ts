@@ -6,7 +6,8 @@ import { InventoryResDto } from './dto/inventory-res.dto';
 import { QueryInventoryDto } from './dto/query-inventory.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { ResponseMessage } from 'src/decorator/response-message.decorator';
-
+import { Public } from 'src/decorator/public.decorator';
+@Public()
 @Controller('inventories')
 export class InventoriesController {
   constructor(private readonly inventoriesService: InventoriesService) {}

@@ -32,6 +32,11 @@ export class AuthController {
         return this.authService.logout(sessionId)
     }
 
+    @Get('verify-token')
+    verifyToken(@User() user: PayloadType): PayloadType {
+        return user
+    }
+
     @Public()
     @Post('register')
     @Post()
