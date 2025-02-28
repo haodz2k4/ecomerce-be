@@ -14,6 +14,7 @@ import * as redisStore from 'cache-manager-redis-store';
 import { CategoriesModule } from './api/categories/categories.module';
 import { InventoriesModule } from './api/inventories/inventories.module';
 import { UploadModule } from './api/upload/upload.module';
+import { CartsModule } from './api/carts/carts.module';
 @Module({
   imports: [
     InventoriesModule,
@@ -29,6 +30,7 @@ import { UploadModule } from './api/upload/upload.module';
     ProductsModule,
     CategoriesModule,
     UploadModule,
+    CartsModule,
     BullModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
