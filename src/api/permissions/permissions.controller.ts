@@ -6,7 +6,9 @@ import { PermissionResDto } from './dto/permission-res.dto';
 import { QueryPermissionDto } from './dto/query-permission.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { ResponseMessage } from 'src/decorator/response-message.decorator';
+import { Public } from 'src/decorator/public.decorator';
 
+@Public()
 @Controller('permissions')
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}

@@ -141,3 +141,22 @@ model Inventories {
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
 }
+
+
+model Carts {
+  id Int @id @default(autoincrement())
+  userId String?
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+  cartsItems Carts_items[]
+}
+
+model Carts_items{
+  id Int @id @default(autoincrement())
+  cartId Int 
+  cart Carts @relation(fields: [cartId], references: [id])
+  productId String
+  quantity Int
+  createdAt DateTime
+  updatedAt DateTime @updatedAt
+}
