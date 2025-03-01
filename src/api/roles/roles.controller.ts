@@ -6,7 +6,9 @@ import { RoleResDto } from './dto/role-res.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { QueryRoleDto } from './dto/query-role.dto';
 import { ResponseMessage } from 'src/decorator/response-message.decorator';
+import { Public } from 'src/decorator/public.decorator';
 
+@Public()
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}

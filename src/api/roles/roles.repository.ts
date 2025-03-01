@@ -65,7 +65,9 @@ export class RolesRepository implements IRepository<RoleResDto> {
         //Keyword 
         if(keyword) {
             finds.push({
-                keyword
+                title: {
+                    contains: keyword
+                }
             })
         }
 
