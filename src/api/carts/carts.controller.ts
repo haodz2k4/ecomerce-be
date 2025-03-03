@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { CartsService } from './carts.service';
 import { AddCartDto } from './dto/add-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { User } from 'src/decorator/user.decorator';
 import { CartItemResDto } from './dto/cart-item-res.dto';
+import { QueryCartDto } from './dto/query-cart.dto';
 
 @Controller('carts')
 export class CartsController {
@@ -15,8 +16,8 @@ export class CartsController {
   }
 
   @Get()
-  findAll() {
-    return this.cartsService.findAll();
+  get(@User('id') userId: string,@Query() queryCartDto: QueryCartDto) {
+    return this.cartsService.get(userId, queryCartDto);
   }
 
   @Get(':id')
@@ -24,9 +25,12 @@ export class CartsController {
     return this.cartsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
-    return this.cartsService.update(+id, updateCartDto);
+  @Patch('')
+  update(
+    @User('id') userId: string, 
+    @Body() updateCartDto: UpdateCartDto
+  ) :Promise<CartItemResDto> {
+    return this.cartsService.update(userId, updateCartDto);
   }
 
   @Delete(':id')
