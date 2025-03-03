@@ -1,15 +1,17 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CartsService } from './carts.service';
-import { CreateCartDto } from './dto/create-cart.dto';
+import { AddCartDto } from './dto/add-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
+import { User } from 'src/decorator/user.decorator';
+import { CartItemResDto } from './dto/cart-item-res.dto';
 
 @Controller('carts')
 export class CartsController {
   constructor(private readonly cartsService: CartsService) {}
 
   @Post()
-  create(@Body() createCartDto: CreateCartDto) {
-    return this.cartsService.create(createCartDto);
+  add(@User('id') userId: string,@Body() addCartDto: AddCartDto) :Promise<CartItemResDto> {
+    return this.cartsService.add(userId,addCartDto);
   }
 
   @Get()

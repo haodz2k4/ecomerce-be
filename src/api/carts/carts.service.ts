@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCartDto } from './dto/create-cart.dto';
+import { AddCartDto, } from './dto/add-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
+import { CartsRepository } from './carts.repositoy';
+import { CartItemResDto } from './dto/cart-item-res.dto';
 
 @Injectable()
 export class CartsService {
-  create(createCartDto: CreateCartDto) {
-    return 'This action adds a new cart';
+
+  constructor(private cartsRepository: CartsRepository) {}
+  add(userId: string, addCartDto: AddCartDto) :Promise<CartItemResDto> {
+    return this.cartsRepository.add(userId, addCartDto);
   }
 
   findAll() {
