@@ -20,12 +20,8 @@ export class CartsController {
     return this.cartsService.get(userId, queryCartDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cartsService.findOne(+id);
-  }
 
-  @Patch('')
+  @Patch()
   update(
     @User('id') userId: string, 
     @Body() updateCartDto: UpdateCartDto
@@ -33,8 +29,13 @@ export class CartsController {
     return this.cartsService.update(userId, updateCartDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cartsService.remove(+id);
+  @Delete()
+  remove(@User('id') userId: string, @Body('productId') productId: string) {
+    return this.cartsService.remove(userId, productId);
+  }
+
+  @Delete('clear')
+  clear(@User('id') userId: string) :Promise<void> {
+    return this.cartsService.clear(userId)
   }
 }

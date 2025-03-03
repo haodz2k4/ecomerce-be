@@ -12,5 +12,5 @@ export class CartResDto {
     userId: string;
 
     @Expose()
-    cart_items: PaginatedResDto<CartItemResDto>
+    cart_items: unknown
 }

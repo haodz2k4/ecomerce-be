@@ -17,15 +17,15 @@ export class CartsService {
     return this.cartsRepository.get(userId, queryCartDto);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cart`;
-  }
-
   update(userId: string, updateCartDto: UpdateCartDto) :Promise<CartItemResDto> {
     return this.cartsRepository.update(userId, updateCartDto)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cart`;
+  remove(userId: string, productId: string) {
+    return this.cartsRepository.remove(userId, productId)
+  }
+
+  clear(userId: string) :Promise<void> {
+    return this.cartsRepository.clear(userId)
   }
 }

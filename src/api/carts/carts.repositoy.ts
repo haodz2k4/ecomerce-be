@@ -41,8 +41,10 @@ export class CartsRepository {
         } = queryCartDto;
         const where: Record<string, unknown> = {}
         if(keyword) {
-            where.title = {
-                contains: keyword
+            where.product = {
+                title: {
+                    contains: keyword
+                }
             }
         }
         if(minQuantity || maxQuantity) {
@@ -58,17 +60,32 @@ export class CartsRepository {
                     },
                     where,
                     take: limit,
-                    skip
+                    skip,
+                    include: {
+                        product: true 
+                    }
                 }
-            }
+                
+            },
+
         })
-        const pagination = new Pagination(page, limit,cart.cartsItems.length )
+        if(!cart) {
+            throw new NotFoundException("Cart is not found");
+        }
+        const pagination = new Pagination(page, limit,cart.cartsItems.length)
         return plainToInstance(CartResDto, {
             id: cart.id,
             userId,
-            cart_items: new PaginatedResDto(plainToInstance(CartItemResDto, cart.cartsItems),pagination)
+            cart_items: {
+                items: cart.cartsItems,
+                pagination
+            }
         })
 
+    }
+
+    async getTotalCartItem() :Promise<number> {
+        return await this.prisma.carts.count()
     }
 
     async add(userId: string, addCartDto: AddCartDto) :Promise<CartItemResDto> {
@@ -137,4 +154,29 @@ export class CartsRepository {
         return plainToInstance(CartItemResDto, cartItem);
     }
 
+    async remove(userId: string, productId: string): Promise<void> {
+        const cart = await this.generateWhenNotExists(userId);
+        const cartItem = await this.prisma.carts_items.findFirst({
+            where: {
+                cartId: cart.id,
+                productId: productId
+            }
+        })
+        if(!cartItem) {
+            throw new NotFoundException("Cart item is not exists")
+        }
+        await this.prisma.carts_items.delete({
+            where: {id: cartItem.id}
+        })
+        
+    }
+
+    async clear(userId: string) :Promise<void> {
+        const cart = await this.generateWhenNotExists(userId)
+        await this.prisma.carts_items.deleteMany({
+            where: {
+                id: cart.id
+            }
+        })
+    }
 }
