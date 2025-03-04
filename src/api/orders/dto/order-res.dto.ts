@@ -15,6 +15,9 @@ export class OrderResDto {
     totalPrice: number;
 
     @Expose()
+    orderItems: OrderResDto[];
+
+    @Expose()
     createdAt: Date;
 
     @Expose()

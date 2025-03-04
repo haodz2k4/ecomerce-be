@@ -6,9 +6,6 @@ export class CreateOrderItem {
     @IsUUID()
     productId: string;
 
-    @IsUUID()
-    orderId: string;
-
     @IsNumber()
     price: number;
 

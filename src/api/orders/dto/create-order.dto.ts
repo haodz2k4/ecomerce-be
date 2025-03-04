@@ -8,13 +8,11 @@ export class CreateOrderDto {
 
     @IsUUID()
     @IsOptional()
-    userId: string;
+    userId?: string;
 
     @IsEnum(OrderStatusEnum)
     status: OrderStatusEnum;
 
     @IsArray()
-    @MinLength(1)
-    @Type(() => CreateOrderItem)
     items: CreateOrderItem[];
 }
