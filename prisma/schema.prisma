@@ -37,6 +37,7 @@ model Users {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   deletedAt DateTime?
+  orders Orders[]
 }
 
 model Sessions {
@@ -99,7 +100,8 @@ model Products {
   slug String @unique
 
   images Products_images[] 
-  inventories Inventories[]
+  inventories Inventories[] 
+  ordersItems Orders_items[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -158,5 +160,38 @@ model Carts_items{
   productId String
   quantity Int
   createdAt DateTime
+  updatedAt DateTime @updatedAt
+}
+
+enum StatusOrder {
+  pending 
+  confirmed
+  processing
+  shipped
+  delivered
+  canceled 
+  failed
+}
+
+model Orders {
+  id String @id @default(uuid())
+  userId String?
+  user Users? @relation(fields: [userId], references: [id])
+  ordersItems Orders_items[]
+  status StatusOrder
+  totalPrice Int 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Orders_items {
+  id Int @id @default(autoincrement())
+  productId String
+  product Products @relation(fields: [productId], references: [id])
+  orderId String
+  orders Orders @relation(fields: [orderId], references: [id])
+  price Int
+  quantity Int 
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
