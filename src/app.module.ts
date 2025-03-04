@@ -15,6 +15,7 @@ import { CategoriesModule } from './api/categories/categories.module';
 import { InventoriesModule } from './api/inventories/inventories.module';
 import { UploadModule } from './api/upload/upload.module';
 import { CartsModule } from './api/carts/carts.module';
+import { OrdersModule } from './api/orders/orders.module';
 @Module({
   imports: [
     InventoriesModule,
@@ -22,6 +23,7 @@ import { CartsModule } from './api/carts/carts.module';
     ConfigModule.forRoot({
       isGlobal: true
     }),
+    OrdersModule,
     UsersModule,
     AuthModule,
     RolesModule,

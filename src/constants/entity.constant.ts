@@ -25,6 +25,15 @@ export enum PermissionNameEnum {
     DELETE = 'delete'
 }
 
+export enum PermissionResourceEnum {
+    USERS = 'users',
+    PRODUCTS = 'products',
+    CATEGORIES = 'categories',
+    INVENTORIES = 'inventories',
+    ROLES = 'roles',
+    PERMISSIONS = 'permissions',
+    ORDERS = 'orders'
+}
 //Products
 export enum ProductStatusEnum {
     ACTIVE = 'active',

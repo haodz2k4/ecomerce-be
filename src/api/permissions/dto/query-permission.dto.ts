@@ -1,6 +1,6 @@
 import { IsEnum, IsOptional, IsString } from "class-validator";
 import { QueryDto } from "src/common/dto/query.dto";
-import { PermissionNameEnum } from "src/constants/entity.constant";
+import { PermissionNameEnum, PermissionResourceEnum } from "src/constants/entity.constant";
 
 
 
@@ -14,6 +14,7 @@ export class QueryPermissionDto extends QueryDto {
 
     @IsString()
     @IsOptional()
-    resource?: string;
+    @IsEnum(PermissionResourceEnum)
+    resource?: PermissionResourceEnum;
 
 }

@@ -20,7 +20,7 @@ export class RolesRepository implements IRepository<RoleResDto> {
             title,
             description,
             status,
-            permissionIds
+            permissionIds = []
         } = createDto;
         const permissions = permissionIds.map((item: string) => ({permissionId: item}));
         const role = await this.prisma.roles.create({
