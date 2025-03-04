@@ -179,7 +179,6 @@ model Orders {
   user Users? @relation(fields: [userId], references: [id])
   ordersItems Orders_items[]
   status StatusOrder
-  totalPrice Int 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
