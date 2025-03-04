@@ -175,7 +175,7 @@ export class CartsRepository {
         const cart = await this.generateWhenNotExists(userId)
         await this.prisma.carts_items.deleteMany({
             where: {
-                id: cart.id
+                cartId: cart.id
             }
         })
     }
