@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { ResponseMessage } from 'src/decorator/response-message.decorator';
+import { QueryOrderDto } from './dto/query-order.dto';
+import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
+import { OrderResDto } from './dto/order-res.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -15,8 +18,8 @@ export class OrdersController {
   }
 
   @Get()
-  findAll() {
-    return this.ordersService.findAll();
+  findAll(@Query() queryOrderDto: QueryOrderDto) :Promise<PaginatedResDto<OrderResDto>> {
+    return this.ordersService.findAll(queryOrderDto);
   }
 
   @Get(':id')

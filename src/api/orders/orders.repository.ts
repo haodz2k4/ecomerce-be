@@ -5,6 +5,8 @@ import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { plainToInstance } from 'class-transformer';
+import { QueryOrderDto } from './dto/query-order.dto';
+import { Pagination } from 'src/utils/pagination';
 
 
 
@@ -30,9 +32,72 @@ export class OrdersRepository implements IRepository<OrderResDto> {
         })
         return plainToInstance(OrderResDto, order)
     }
-    getMany(queryDto?: unknown): Promise<PaginatedResDto<OrderResDto>> {
-        throw new Error('Method not implemented.');
+
+    async getMany(queryDto?: QueryOrderDto): Promise<PaginatedResDto<OrderResDto>> {
+        const {
+            keyword,
+            page,
+            limit,
+            sortBy,
+            sortOrder,
+            userId,
+            status
+        } = queryDto;
+
+        const where: Record<string, unknown> = {};
+        if(status) {
+            where.status = status;
+        }
+        if(userId) {
+            where.userId = userId;
+        }
+        if(keyword) {
+            where["OR"] = [
+                {
+                    user: {
+                        fullName: {
+                            contains: keyword
+                        }
+                    }
+                },
+                {
+                    address: {
+                        contains: keyword
+                    }
+                }
+            ]
+        }
+        const [orders, total] = await Promise.all([
+            this.prismaService.orders.findMany({
+                where,
+                orderBy: {
+                    [sortBy]: sortOrder
+                },
+                include: {
+                    ordersItems: {
+                        include: {
+                            product: true
+                        }
+                    },
+                    user: true 
+                }
+            }),
+            this.getTotalDocument(where)
+        ]) 
+
+        const pagination = new Pagination(page, limit,total);
+        return new PaginatedResDto(plainToInstance(OrderResDto, orders), pagination)
+
+        
     }
+
+    async getTotalDocument(where?: Record<string, unknown>) :Promise<number> {
+
+        return await this.prismaService.orders.count({
+            where
+        });
+    }
+
     getOneById(id: unknown): Promise<OrderResDto> {
         throw new Error('Method not implemented.');
     }
