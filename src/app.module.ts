@@ -16,6 +16,8 @@ import { InventoriesModule } from './api/inventories/inventories.module';
 import { UploadModule } from './api/upload/upload.module';
 import { CartsModule } from './api/carts/carts.module';
 import { OrdersModule } from './api/orders/orders.module';
+import { APP_FILTER } from '@nestjs/core';
+import { GlobalExceptionFilter } from './filters/global-exception.filter';
 @Module({
   imports: [
     InventoriesModule,
@@ -58,6 +60,11 @@ import { OrdersModule } from './api/orders/orders.module';
     })
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter
+    }
+  ],
 })
 export class AppModule {}

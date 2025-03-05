@@ -179,6 +179,7 @@ model Orders {
   user Users? @relation(fields: [userId], references: [id])
   ordersItems Orders_items[]
   status StatusOrder
+  address String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

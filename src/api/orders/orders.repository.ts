@@ -18,11 +18,12 @@ export class OrdersRepository implements IRepository<OrderResDto> {
     constructor(private prismaService: PrismaService) {}
     
     async create(createDto: CreateOrderDto): Promise<OrderResDto> {
-        const {userId, status, items} = createDto;
+        const {userId, status,address, items} = createDto;
         const order = await this.prismaService.orders.create({
             data: {
                 userId,
                 status,
+                address,
                 ordersItems: {
                     create: items
                 }
