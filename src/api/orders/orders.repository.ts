@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { IRepository } from 'src/common/interface/repository.interface';
 import { OrderResDto } from './dto/order-res.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
@@ -98,8 +98,22 @@ export class OrdersRepository implements IRepository<OrderResDto> {
         });
     }
 
-    getOneById(id: unknown): Promise<OrderResDto> {
-        throw new Error('Method not implemented.');
+    async getOneById(id: string): Promise<OrderResDto> {
+        const order = await this.prismaService.orders.findUnique({
+            where: {id},
+            include: {
+                ordersItems: {
+                    include: {
+                        product: true
+                    }
+                },
+                user: true 
+            }
+        });
+        if(!order) {
+            throw new NotFoundException("Order is not found");
+        }
+        return plainToInstance(OrderResDto, order)
     }
     update(id: unknown, updateDto: unknown): Promise<OrderResDto> {
         throw new Error('Method not implemented.');
