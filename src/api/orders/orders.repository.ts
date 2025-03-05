@@ -7,6 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { plainToInstance } from 'class-transformer';
 import { QueryOrderDto } from './dto/query-order.dto';
 import { Pagination } from 'src/utils/pagination';
+import { UpdateOrderDto } from './dto/update-order.dto';
 
 
 
@@ -115,11 +116,27 @@ export class OrdersRepository implements IRepository<OrderResDto> {
         }
         return plainToInstance(OrderResDto, order)
     }
-    update(id: unknown, updateDto: unknown): Promise<OrderResDto> {
-        throw new Error('Method not implemented.');
+    async update(id: string, updateDto: UpdateOrderDto): Promise<OrderResDto> {
+        await this.getOneById(id)
+        const order = await this.prismaService.orders.update({
+            where: {
+                id
+            },
+            data: updateDto,
+            include: {
+                ordersItems: {
+                    include: {
+                        product: true
+                    }
+                },
+                user: true 
+            }
+        });
+        return plainToInstance(OrderResDto, order)
     }
-    remove(id: unknown): Promise<void> {
-        throw new Error('Method not implemented.');
+    async remove(id: string): Promise<void> {
+        await this.getOneById(id)
+        await this.prismaService.orders.delete({where: {id}})
     }
     
 }
