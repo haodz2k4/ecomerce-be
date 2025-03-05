@@ -116,10 +116,20 @@ export class RolesRepository implements IRepository<RoleResDto> {
     }
 
     async update(id: string, updateDto: UpdateRoleDto): Promise<RoleResDto> {
+        const {title, description, status, permissionIds} = updateDto
         await this.getOneById(id);
+        await this.prisma.roles_permissions.deleteMany({where: {roleId: id}})
+        const permissions = permissionIds.map((item: string) => ({permissionId: item}));
         const role = await this.prisma.roles.update({
             where: {id},
-            data: updateDto,
+            data: {
+                title,
+                description,
+                status,
+                permissions: {
+                    create: permissions
+                }
+            },
             include: {
                 permissions: {
                     select: {
