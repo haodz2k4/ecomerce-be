@@ -8,6 +8,8 @@ import { plainToInstance } from 'class-transformer';
 import { QueryOrderDto } from './dto/query-order.dto';
 import { Pagination } from 'src/utils/pagination';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { UsersService } from '../users/users.service';
+import { ProductsService } from '../products/products.service';
 
 
 
@@ -15,17 +17,36 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 @Injectable()
 export class OrdersRepository implements IRepository<OrderResDto> {
 
-    constructor(private prismaService: PrismaService) {}
+    constructor(
+        private prismaService: PrismaService,
+        private productsService: ProductsService
+    ) {}
     
     async create(createDto: CreateOrderDto): Promise<OrderResDto> {
         const {userId, status,address, items} = createDto;
+
+        const orderItems = await Promise.all(
+            items.map(async (item) => {
+
+                const product = await this.productsService.findOne(item.productId);
+                if(product.inventories.quantity === 0 || product.inventories.quantity < item.quantity) {
+                    throw new NotFoundException(`Product with id ${item.productId} is not enough stock`)
+                }
+
+                return {
+                    productId: item.productId,
+                    quantity: item.quantity,
+                    price: product.price
+                }
+            })
+        )
         const order = await this.prismaService.orders.create({
             data: {
                 userId,
                 status,
                 address,
                 ordersItems: {
-                    create: items
+                    create: orderItems
                 }
             },
             include: {

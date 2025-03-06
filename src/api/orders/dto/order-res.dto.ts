@@ -16,6 +16,9 @@ export class OrderResDto {
     @Expose()
     @Type(() => UserResDto)
     user: UserResDto;
+    
+    @Expose()
+    address: string;
 
     @Expose()
     totalPrice: number;

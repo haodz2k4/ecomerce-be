@@ -7,8 +7,5 @@ export class CreateOrderItem {
     productId: string;
 
     @IsNumber()
-    price: number;
-
-    @IsNumber()
     quantity: number;
 }
