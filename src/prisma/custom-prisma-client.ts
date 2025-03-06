@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { generateSlug } from 'src/utils/slug';
+import { ordersInclude } from './include/orders-include';
 
 export function softDeleteExtension(prisma: PrismaClient) {
 
@@ -106,6 +107,16 @@ export function softDeleteExtension(prisma: PrismaClient) {
             args.data.slug = generateSlug(title);
           }
           return query(args)
+        }
+      },
+      orders: {
+        async findMany({args, query}) {
+          args.include = ordersInclude
+          return query(args);
+        },
+        async findUnique({args, query}) {
+          args.include = ordersInclude
+          return query(args);
         }
       }
     },

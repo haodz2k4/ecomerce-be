@@ -1,7 +1,8 @@
+
 import { Exclude, Expose, Type } from "class-transformer";
-import { UserResDto } from "src/api/users/dto/user-res.dto";
 import { OrderStatusEnum } from "src/constants/entity.constant";
 import { OrderItemResDto } from "./order-item-res.dto";
+import { UserResDto } from "src/api/users/dto/user-res.dto";
 
 
 @Exclude()
@@ -14,8 +15,7 @@ export class OrderResDto {
     status: OrderStatusEnum;
 
     @Expose()
-    @Type(() => UserResDto)
-    user: UserResDto;
+    user: Pick<UserResDto, 'id' | 'fullName' | 'email'>;
     
     @Expose()
     address: string;

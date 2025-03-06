@@ -1,5 +1,5 @@
+import { ProductResDto } from 'src/api/products/dto/product-res.dto';
 import { Exclude, Expose, Type } from "class-transformer";
-import { ProductResDto } from "src/api/products/dto/product-res.dto";
 
 @Exclude()
 export class OrderItemResDto {
@@ -9,7 +9,7 @@ export class OrderItemResDto {
 
     @Expose()
     @Type(() => ProductResDto)
-    product: ProductResDto;
+    product: Pick<ProductResDto, 'id' | 'title'|'price'| 'discountPercentage' | 'thumbnail' | 'inventories'>;
 
     @Expose()
     price: number;

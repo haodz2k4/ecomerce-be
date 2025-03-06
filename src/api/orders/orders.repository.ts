@@ -8,7 +8,6 @@ import { plainToInstance } from 'class-transformer';
 import { QueryOrderDto } from './dto/query-order.dto';
 import { Pagination } from 'src/utils/pagination';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { UsersService } from '../users/users.service';
 import { ProductsService } from '../products/products.service';
 
 
@@ -24,7 +23,10 @@ export class OrdersRepository implements IRepository<OrderResDto> {
     
     async create(createDto: CreateOrderDto): Promise<OrderResDto> {
         const {userId, status,address, items} = createDto;
-
+        const user = await this.prismaService.users.findUnique({where: {id: userId}});
+        if(!user) {
+            throw new NotFoundException(`User with ${userId} is not found`);
+        }
         const orderItems = await Promise.all(
             items.map(async (item) => {
 
@@ -48,9 +50,6 @@ export class OrdersRepository implements IRepository<OrderResDto> {
                 ordersItems: {
                     create: orderItems
                 }
-            },
-            include: {
-                ordersItems: true
             }
         })
         return plainToInstance(OrderResDto, order)
@@ -64,9 +63,7 @@ export class OrdersRepository implements IRepository<OrderResDto> {
             sortBy,
             sortOrder,
             userId,
-            status,
-            minTotalPrice,
-            maxTotalPrice
+            status
         } = queryDto;
 
         const where: Record<string, unknown> = {};
@@ -97,14 +94,6 @@ export class OrdersRepository implements IRepository<OrderResDto> {
                 where,
                 orderBy: {
                     [sortBy]: sortOrder
-                },
-                include: {
-                    ordersItems: {
-                        include: {
-                            product: true
-                        }
-                    },
-                    user: true 
                 }
             }),
             this.getTotalDocument(where)
@@ -125,15 +114,7 @@ export class OrdersRepository implements IRepository<OrderResDto> {
 
     async getOneById(id: string): Promise<OrderResDto> {
         const order = await this.prismaService.orders.findUnique({
-            where: {id},
-            include: {
-                ordersItems: {
-                    include: {
-                        product: true
-                    }
-                },
-                user: true 
-            }
+            where: {id}
         });
         if(!order) {
             throw new NotFoundException("Order is not found");
@@ -146,15 +127,7 @@ export class OrdersRepository implements IRepository<OrderResDto> {
             where: {
                 id
             },
-            data: updateDto,
-            include: {
-                ordersItems: {
-                    include: {
-                        product: true
-                    }
-                },
-                user: true 
-            }
+            data: updateDto
         });
         return plainToInstance(OrderResDto, order)
     }

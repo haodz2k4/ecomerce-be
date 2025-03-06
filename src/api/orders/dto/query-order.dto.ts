@@ -13,20 +13,4 @@ export class QueryOrderDto extends QueryDto {
     @IsOptional()
     status?: OrderStatusEnum;
 
-    @IsNumber()
-    @IsOptional()
-    minTotalPrice?: number;
-
-    @IsNumber()
-    @IsOptional()
-    maxTotalPrice?: number;
-
-    @IsNumber()
-    @IsOptional()
-    minOrderCount?: number;
-
-    @IsNumber()
-    @IsOptional()
-    maxOrderCount?: number;
-
 }
