@@ -34,9 +34,6 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                 images: {
                     create: images.map((item) => ({url: item}))
                 }
-            },
-            include: {
-                category: true
             }
         })
         return plainToInstance(ProductResDto, product)
@@ -131,17 +128,7 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                     skip,
                     take: limit,
                     include: {
-                        images: {
-                            select: {
-                                url: true
-                            }
-                        },
-                        category: true,
-                        inventories: {
-                            select: {
-                                quantity: true
-                            }
-                        }
+                        category: true
                     }
                 }),
                 this.totalDocument(where)
@@ -159,17 +146,7 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         const product = await this.prisma.products.findUnique({
             where: {id},
             include: {
-                images: {
-                    select: {
-                        url: true
-                    }
-                },
-                category: true,
-                inventories: {
-                    select: {
-                        quantity: true
-                    }
-                }
+                category: true
             }
         });
         if(!product) {
@@ -182,17 +159,7 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
         const product = await this.prisma.products.findUnique({
             where: {slug},
             include: {
-                images: {
-                    select: {
-                        url: true
-                    }
-                },
-                category: true,
-                inventories: {
-                    select: {
-                        quantity: true
-                    }
-                }
+                category: true
             }
         })
         if(!product) {
@@ -211,19 +178,6 @@ export class ProductsReposiory implements IRepository<ProductResDto> {
                 ...updateDto,
                 images: {
                     create: images.map((item) => ({url: item}))
-                }
-            },
-            include: {
-                images: {
-                    select: {
-                        url: true
-                    }
-                },
-                category: true,
-                inventories: {
-                    select: {
-                        quantity: true
-                    }
                 }
             }
         });

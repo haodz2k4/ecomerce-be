@@ -63,7 +63,6 @@ export function softDeleteExtension(prisma: PrismaClient) {
       },
       users: {
         async findMany({args, query}) {
-          
           return query(args)
         },
         async create({ args, query }) {
@@ -85,6 +84,17 @@ export function softDeleteExtension(prisma: PrismaClient) {
             args.data.slug = generateSlug(title)
           }
 
+          return query(args)
+        },
+        async findMany({args, query}) {
+          args.include = {
+            inventories: true,
+            images: {
+              select: {
+                url: true 
+              }
+            } 
+          }
           return query(args)
         }
         

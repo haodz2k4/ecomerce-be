@@ -16,10 +16,15 @@ export class ProductResDto {
     slug: string;
 
     @Expose()
-    @Transform(({value = []}: {value: Inventories[]}) =>  ({
-        quantity: value.reduce((sum, item) => sum + item.quantity, 0),
-        total: value.length
-    }))
+    @Transform(({value}: {value: Inventories[]}) =>  {
+        if(!value) {
+            return;
+        }
+        return ({
+            quantity: value.reduce((sum, item) => sum + item.quantity, 0),
+            total: value.length
+        })
+    })
     inventories?: {
         quantity: number;
         total: number;

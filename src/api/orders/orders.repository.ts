@@ -64,7 +64,9 @@ export class OrdersRepository implements IRepository<OrderResDto> {
             sortBy,
             sortOrder,
             userId,
-            status
+            status,
+            minTotalPrice,
+            maxTotalPrice
         } = queryDto;
 
         const where: Record<string, unknown> = {};
