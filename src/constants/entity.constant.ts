@@ -56,3 +56,8 @@ export enum OrderStatusEnum {
     CANCELED = 'canceled',
     FAILED = 'failed'   
 }
+
+export enum PaymentMethodEnum {
+    CASH = 'cash',
+    CREDIT_CARD = 'credit_card'
+}

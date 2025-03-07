@@ -21,6 +21,12 @@ export class OrderResDto {
     address: string;
 
     @Expose()
+    phone: string;
+
+    @Expose()
+    paymentMethod: string;
+
+    @Expose()
     totalPrice: number;
 
     @Expose()

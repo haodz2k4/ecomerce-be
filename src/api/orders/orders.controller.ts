@@ -6,6 +6,7 @@ import { ResponseMessage } from 'src/decorator/response-message.decorator';
 import { QueryOrderDto } from './dto/query-order.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { OrderResDto } from './dto/order-res.dto';
+import { User } from 'src/decorator/user.decorator';
 
 @Controller('orders')
 export class OrdersController {
@@ -13,8 +14,8 @@ export class OrdersController {
 
   @Post()
   @ResponseMessage('Create order successfully')
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersService.create(createOrderDto);
+  create(@User('id') userId: string,@Body() createOrderDto: CreateOrderDto) {
+    return this.ordersService.create(userId,createOrderDto);
   }
 
   @Get()

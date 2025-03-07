@@ -1,13 +1,12 @@
-import { IsArray, IsEnum, IsOptional, IsPhoneNumber, IsString, IsUUID, MinLength } from "class-validator";
-import { OrderStatusEnum } from "src/constants/entity.constant";
+import { IsArray, IsEnum, IsPhoneNumber, IsString, IsUUID, MinLength } from "class-validator";
+import { OrderStatusEnum, PaymentMethodEnum } from "src/constants/entity.constant";
 import { CreateOrderItem } from "./create-order-item.dto";
 
 
 export class CreateOrderDto {
 
-    @IsUUID()
-    @IsOptional()
-    userId?: string;
+    @IsEnum(PaymentMethodEnum)
+    paymentMethod: PaymentMethodEnum;
 
     @IsEnum(OrderStatusEnum)
     status: OrderStatusEnum;

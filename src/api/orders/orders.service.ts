@@ -11,8 +11,8 @@ export class OrdersService {
 
   constructor(private ordersRepository: OrdersRepository) {}
 
-  create(createOrderDto: CreateOrderDto) {
-    return this.ordersRepository.create(createOrderDto)
+  create(userId: string, createOrderDto: CreateOrderDto) {
+    return this.ordersRepository.create(userId, createOrderDto)
   }
 
   findAll(queryOrderDto: QueryOrderDto):Promise<PaginatedResDto<OrderResDto>> {

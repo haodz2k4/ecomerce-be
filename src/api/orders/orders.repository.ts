@@ -14,15 +14,15 @@ import { ProductsService } from '../products/products.service';
 
 
 @Injectable()
-export class OrdersRepository implements IRepository<OrderResDto> {
+export class OrdersRepository {
 
     constructor(
         private prismaService: PrismaService,
         private productsService: ProductsService
     ) {}
     
-    async create(createDto: CreateOrderDto): Promise<OrderResDto> {
-        const {userId, status,address,phone, items} = createDto;
+    async create(userId: string, createDto: CreateOrderDto): Promise<OrderResDto> {
+        const { status,address,phone,paymentMethod, items} = createDto;
         const user = await this.prismaService.users.findUnique({where: {id: userId}});
         if(!user) {
             throw new NotFoundException(`User with ${userId} is not found`);
@@ -48,6 +48,7 @@ export class OrdersRepository implements IRepository<OrderResDto> {
                 status,
                 address,
                 phone,
+                paymentMethod,
                 ordersItems: {
                     create: orderItems
                 }
