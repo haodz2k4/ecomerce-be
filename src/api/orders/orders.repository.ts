@@ -22,7 +22,7 @@ export class OrdersRepository implements IRepository<OrderResDto> {
     ) {}
     
     async create(createDto: CreateOrderDto): Promise<OrderResDto> {
-        const {userId, status,address, items} = createDto;
+        const {userId, status,address,phone, items} = createDto;
         const user = await this.prismaService.users.findUnique({where: {id: userId}});
         if(!user) {
             throw new NotFoundException(`User with ${userId} is not found`);
@@ -47,6 +47,7 @@ export class OrdersRepository implements IRepository<OrderResDto> {
                 userId,
                 status,
                 address,
+                phone,
                 ordersItems: {
                     create: orderItems
                 }

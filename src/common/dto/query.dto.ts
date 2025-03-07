@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsDate, IsEnum, IsNumber, IsOptional, IsString, Min } from "class-validator";
+import { IsEnum, IsNumber, IsOptional, IsString, Min } from "class-validator";
 import { DEFAULT_LIMIT, DefaultSortBy, DefaultSortOrder, SortOrderEnum } from "src/constants/app.constant";
 import { IRange } from "../interface/app.interface";
 
@@ -31,20 +31,16 @@ export class QueryDto {
     sortOrder?: SortOrderEnum = DefaultSortOrder;
 
     //Range createdAt
-    @IsDate()
     @IsOptional()
     startCreatedAt: Date;
 
-    @IsDate()
     @IsOptional()
     endCreatedAt: Date;
 
     //Range updatedAt
-    @IsDate()
     @IsOptional()
     startUpdatedAt: Date;
 
-    @IsDate()
     @IsOptional()
     endUpdatedAt: Date;
 

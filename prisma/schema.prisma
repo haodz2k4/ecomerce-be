@@ -102,7 +102,7 @@ model Products {
   images Products_images[] 
   inventories Inventories[] 
   ordersItems Orders_items[]
-
+  cartsItems Carts_items[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
@@ -147,8 +147,8 @@ model Inventories {
 
 model Carts {
   id Int @id @default(autoincrement())
-  userId String?
-  createdAt DateTime
+  userId String? @unique
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   cartsItems Carts_items[]
 }
@@ -158,8 +158,9 @@ model Carts_items{
   cartId Int 
   cart Carts @relation(fields: [cartId], references: [id])
   productId String
+  product Products @relation(fields: [productId], references: [id])
   quantity Int
-  createdAt DateTime
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
@@ -179,6 +180,7 @@ model Orders {
   user Users? @relation(fields: [userId], references: [id])
   ordersItems Orders_items[]
   status StatusOrder
+  phone String 
   address String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

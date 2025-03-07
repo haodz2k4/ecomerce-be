@@ -1,4 +1,4 @@
-import { IsArray, IsEnum, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
+import { IsArray, IsEnum, IsOptional, IsPhoneNumber, IsString, IsUUID, MinLength } from "class-validator";
 import { OrderStatusEnum } from "src/constants/entity.constant";
 import { CreateOrderItem } from "./create-order-item.dto";
 
@@ -14,6 +14,9 @@ export class CreateOrderDto {
 
     @IsString()
     address: string;
+
+    @IsPhoneNumber('VN')
+    phone: string;
 
     @IsArray()
     items: CreateOrderItem[];

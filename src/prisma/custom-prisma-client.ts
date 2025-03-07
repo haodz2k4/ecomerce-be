@@ -97,7 +97,29 @@ export function softDeleteExtension(prisma: PrismaClient) {
             } 
           }
           return query(args)
-        }
+        },
+        async findUnique({args, query}) {
+          args.include = {
+            inventories: true,
+            images: {
+              select: {
+                url: true 
+              }
+            } 
+          }
+          return query(args)
+        },
+        async findFirst({args, query}) {
+          args.include = {
+            inventories: true,
+            images: {
+              select: {
+                url: true 
+              }
+            } 
+          }
+          return query(args)
+        },
         
       },
       categories: {
