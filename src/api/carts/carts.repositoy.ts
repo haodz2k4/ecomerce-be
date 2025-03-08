@@ -171,6 +171,20 @@ export class CartsRepository {
         
     }
 
+    async removeMulti(userId:string, productIds: string[]) :Promise<void> {
+        const cart = await this.generateWhenNotExists(userId);
+        await this.prisma.carts_items.deleteMany({
+            where: {
+                cartId: cart.id,
+                product: {
+                    id: {
+                        in: productIds
+                    }
+                }
+            }
+        })
+    }
+
     async clear(userId: string) :Promise<void> {
         const cart = await this.generateWhenNotExists(userId)
         await this.prisma.carts_items.deleteMany({

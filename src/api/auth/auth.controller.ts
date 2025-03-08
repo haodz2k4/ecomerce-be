@@ -37,6 +37,7 @@ export class AuthController {
         return user
     }
 
+
     @Public()
     @Post('register')
     @Post()

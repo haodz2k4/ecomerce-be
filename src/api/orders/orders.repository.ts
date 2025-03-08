@@ -9,6 +9,8 @@ import { QueryOrderDto } from './dto/query-order.dto';
 import { Pagination } from 'src/utils/pagination';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { ProductsService } from '../products/products.service';
+import { ordersInclude } from 'src/prisma/include/orders-include';
+import { CartsService } from '../carts/carts.service';
 
 
 
@@ -18,7 +20,8 @@ export class OrdersRepository {
 
     constructor(
         private prismaService: PrismaService,
-        private productsService: ProductsService
+        private productsService: ProductsService,
+        private cartsService: CartsService
     ) {}
     
     async create(userId: string, createDto: CreateOrderDto): Promise<OrderResDto> {
@@ -42,6 +45,7 @@ export class OrdersRepository {
                 }
             })
         )
+        
         const order = await this.prismaService.orders.create({
             data: {
                 userId,
@@ -52,8 +56,12 @@ export class OrdersRepository {
                 ordersItems: {
                     create: orderItems
                 }
-            }
+            },
+            include: ordersInclude
         })
+        //Remove cart item when create order
+        const productIds = orderItems.map((item) => item.productId);
+        await this.cartsService.removeMulti(userId,productIds)
         return plainToInstance(OrderResDto, order)
     }
 
@@ -129,7 +137,8 @@ export class OrdersRepository {
             where: {
                 id
             },
-            data: updateDto
+            data: updateDto,
+            include: ordersInclude
         });
         return plainToInstance(OrderResDto, order)
     }

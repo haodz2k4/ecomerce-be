@@ -21,8 +21,12 @@ export class CartsService {
     return this.cartsRepository.update(userId, updateCartDto)
   }
 
-  remove(userId: string, productId: string) {
+  remove(userId: string, productId: string) :Promise<void> {
     return this.cartsRepository.remove(userId, productId)
+  }
+
+  removeMulti(userId: string, ids: string[]) :Promise<void> {
+    return this.cartsRepository.removeMulti(userId, ids);
   }
 
   clear(userId: string) :Promise<void> {
