@@ -8,6 +8,9 @@ import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { Sessions, Users } from '@prisma/client';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { ChangePasswordUserDto } from './dto/change-password-user.dto';
+import { CreateUserProvider } from './dto/create-user-provider.dto';
+import { UserProviderResDto } from './dto/user-provider-res.dto';
+import { UserProviderEnum } from 'src/constants/entity.constant';
 
 @Injectable()
 export class UsersService {
@@ -16,6 +19,14 @@ export class UsersService {
     private readonly userRepository: UsersRepository,
     private readonly cloudinaryService: CloudinaryService
   ) {}
+
+  async getUserProvider(providerId: string, provider: UserProviderEnum): Promise<UserProviderResDto> {
+    return this.userRepository.getUserProvider(providerId, provider)
+  }
+
+  async createUserProvider(createUserProvider: CreateUserProvider): Promise<UserProviderResDto> {
+    return this.userRepository.createUserProvider(createUserProvider)
+  }
 
   async createUserSession(userId: string, expiresIn: Date): Promise<Sessions> {
     return this.userRepository.createUserSession(userId, expiresIn)

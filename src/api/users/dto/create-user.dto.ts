@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsDate, IsEmail, IsEnum, IsOptional, IsString, IsStrongPassword } from "class-validator";
+import { IsBoolean, IsDate, IsEmail, IsEnum, IsOptional, IsString, IsStrongPassword } from "class-validator";
 import { UserGenderEnum, UserStatusEnum } from "src/constants/entity.constant";
 
 
@@ -12,7 +12,7 @@ export class CreateUserDto {
     email: string;
 
     @IsStrongPassword()
-    password: string;
+    password?: string;
 
     @IsString()
     @IsOptional()
@@ -33,4 +33,9 @@ export class CreateUserDto {
     @Type(() => Date)
     @IsOptional()
     birthDate?: Date;
+
+    @IsBoolean()
+    @Type(() => Boolean)
+    verified?: boolean;
+
 }

@@ -56,8 +56,15 @@ export enum OrderStatusEnum {
     CANCELED = 'canceled',
     FAILED = 'failed'   
 }
-
+//Orders 
 export enum PaymentMethodEnum {
     CASH = 'cash',
     CREDIT_CARD = 'credit_card'
+}
+
+//Users_provider 
+export enum UserProviderEnum {
+    GOOGLE = 'google',
+    FACEBOOK = 'facebook',
+    GITHUB = 'github'
 }

@@ -20,5 +20,5 @@ export class LoginResDto {
     refreshToken: string;
 
     @Expose()
-    expiresIn: Date;
+    expiresIn: number;
 }

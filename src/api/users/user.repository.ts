@@ -11,6 +11,9 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { Sessions, Users } from "@prisma/client";
 import { ChangePasswordUserDto } from "./dto/change-password-user.dto";
 import { verifyPassword } from "src/utils/password.util";
+import { CreateUserProvider } from "./dto/create-user-provider.dto";
+import { UserProviderResDto } from "./dto/user-provider-res.dto";
+import { UserProviderEnum } from "src/constants/entity.constant";
 
 
 
@@ -18,6 +21,24 @@ import { verifyPassword } from "src/utils/password.util";
 export class UsersRepository implements IRepository<UserResDto>{
 
     constructor(private prisma: PrismaService) {}
+
+    async getUserProvider(providerId: string, provider: UserProviderEnum): Promise<UserProviderResDto> {
+        const userProvider = await this.prisma.user_providers.findUnique({
+            where: {
+                providerId,
+                provider
+            }
+        })
+        return plainToInstance(UserProviderResDto, userProvider);
+    }
+
+    async createUserProvider(createUserProvider: CreateUserProvider) :Promise<UserProviderResDto> {
+        const {userId} = createUserProvider;
+        const user = await this.prisma.users.findUnique({where: {id: userId}});
+        if(!user) throw new NotFoundException(`User with ${userId} is not found`);
+        const userProvider = await this.prisma.user_providers.create({data: createUserProvider});
+        return plainToInstance(UserProviderResDto, userProvider)
+    }
 
     async createUserSession(userId: string, expiresIn: Date): Promise<Sessions> {
         return this.prisma.sessions.create({data: {
