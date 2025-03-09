@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { LoginResDto } from './dto/login-res.dto';
@@ -11,11 +11,25 @@ import { PayloadType } from './types/payload.type';
 import { VerifyDto } from './dto/verify.dto';
 import { VerifyResDto } from './dto/verify-res.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { GoogleAuthGuard } from 'src/guards/google-auth.guard';
 
 @Controller('auth')
 export class AuthController {
     
     constructor(private authService: AuthService) {}
+
+
+    @Get('google')
+    @Public()
+    @UseGuards(GoogleAuthGuard)
+    google() {}
+
+    @Get('google/callback')
+    @UseGuards(GoogleAuthGuard)
+    @Public()
+    googleLogin(@User() user: PayloadType): LoginResDto {
+        return this.authService.googleLogin(user)
+    }
 
     @Post('login')
     @HttpCode(HttpStatus.OK)

@@ -21,6 +21,7 @@ import { VerifyDto } from './dto/verify.dto';
 import { VerifyResDto } from './dto/verify-res.dto';
 import { ResetPayload } from './types/reset-payload.type';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { PayloadType } from './types/payload.type';
 
 @Injectable()
 export class AuthService {
@@ -48,6 +49,11 @@ export class AuthService {
             throw new UnauthorizedException("Account has been locked");
         }
         return user;
+    }
+
+    googleLogin(user: PayloadType): LoginResDto {
+        
+        return plainToInstance(LoginResDto, user)
     }
 
     async verifyOtp(verifyOtp: VerifyDto) :Promise<VerifyResDto> {

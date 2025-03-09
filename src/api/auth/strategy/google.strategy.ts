@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { Profile } from "passport";
-import { Strategy } from "passport-google-oauth20";
+import { Strategy, VerifyCallback } from "passport-google-oauth20";
 import { UsersService } from "src/api/users/users.service";
 import { RoleUser } from "src/constants/role.constant";
 import { AuthService } from "../auth.service";
@@ -13,7 +13,7 @@ import * as ms from "ms";
 
 
 @Injectable()
-export class GoogleStrategry extends PassportStrategy(Strategy) {
+export class GoogleStrategry extends PassportStrategy(Strategy,'google') {
 
     constructor(
         private configService: ConfigService,
@@ -23,11 +23,12 @@ export class GoogleStrategry extends PassportStrategy(Strategy) {
         super({
             clientID: configService.get('GOOGLE_CLIENT_ID'),
             clientSecret: configService.get('GOOGLE_CLIENT_SECRET'),
-            callbackURL: configService.get('GOOGLE_CALLBACK_URL')
+            callbackURL: configService.get('GOOGLE_CALLBACK_URL'),
+            scope: ['email','profile']
         })
     }
 
-    async validate(_accessToken: string, _refreshToken: string, profile: Profile, cb) {
+    async validate(_accessToken: string, _refreshToken: string, profile: Profile, cb: VerifyCallback) {
         const {id, emails, photos, name} = profile;
         let user = await this.usersService.getUserByEmail(emails[0].value) as UserResDto;
         if(!user) {
@@ -54,17 +55,17 @@ export class GoogleStrategry extends PassportStrategy(Strategy) {
             }
         }
         const expiresIn = parseInt(ms(this.configService.get('JWT_REFRESH_EXPIRES')))
-        const session = await this.usersService.createUserSession(id,new Date(Date.now() + expiresIn) )
+        const session = await this.usersService.createUserSession(user.id,new Date(Date.now() + expiresIn) )
         const {accessToken, refreshToken} = await this.authService.generateAuthToken(user.id,user.roleId, session.id);
 
-        cb(null, user, {
+        return cb(null,{
             id: user.id,
             roleId: user.roleId,
             sessionId: session.id,
             accessToken,
             refreshToken,
-            expiresIn
-        } as LoginResDto)
+            expiresIn: expiresIn / 1000
+        })
         
 
 

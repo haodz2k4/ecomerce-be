@@ -13,7 +13,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const res = ctx.getResponse<Response>();
         const req = ctx.getRequest<Request>();
-
+        console.error(exception)
         let error: ErrorDto;
 
         if (exception instanceof BadRequestException) {

@@ -67,7 +67,9 @@ export function softDeleteExtension(prisma: PrismaClient) {
           return query(args)
         },
         async create({ args, query }) {
-          args.data.password = await hash(args.data.password, 10);
+          if(args.data.password) {
+            args.data.password = await hash(args.data.password, 10);
+          }
           
           return query(args);
         },
