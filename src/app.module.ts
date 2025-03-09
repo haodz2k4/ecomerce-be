@@ -18,8 +18,10 @@ import { CartsModule } from './api/carts/carts.module';
 import { OrdersModule } from './api/orders/orders.module';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
+import { MomoModule } from './api/momo/momo.module';
 @Module({
   imports: [
+    MomoModule,
     InventoriesModule,
     PrismaModule,
     ConfigModule.forRoot({

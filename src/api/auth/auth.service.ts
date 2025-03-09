@@ -51,11 +51,6 @@ export class AuthService {
         return user;
     }
 
-    googleLogin(user: PayloadType): LoginResDto {
-        
-        return plainToInstance(LoginResDto, user)
-    }
-
     async verifyOtp(verifyOtp: VerifyDto) :Promise<VerifyResDto> {
         const {email, otp} = verifyOtp;
         const user = await this.usersService.getUserByEmail(email);

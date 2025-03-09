@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { LoginResDto } from './dto/login-res.dto';
@@ -12,11 +12,18 @@ import { VerifyDto } from './dto/verify.dto';
 import { VerifyResDto } from './dto/verify-res.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { GoogleAuthGuard } from 'src/guards/google-auth.guard';
+import { Response } from 'express';
+import { UserResDto } from '../users/dto/user-res.dto';
+import { plainToInstance } from 'class-transformer';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
     
-    constructor(private authService: AuthService) {}
+    constructor(
+        private authService: AuthService,
+        private configService: ConfigService
+    ) {}
 
 
     @Get('google')
@@ -27,8 +34,8 @@ export class AuthController {
     @Get('google/callback')
     @UseGuards(GoogleAuthGuard)
     @Public()
-    googleLogin(@User() user: PayloadType): LoginResDto {
-        return this.authService.googleLogin(user)
+    googleLogin(@User() user: PayloadType, @Res() res: Response) {
+        res.redirect(`${this.configService.get('FRONTEND_URL')}/login-google?token=${user.accessToken}`)
     }
 
     @Post('login')

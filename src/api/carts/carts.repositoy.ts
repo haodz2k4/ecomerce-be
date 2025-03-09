@@ -30,6 +30,7 @@ export class CartsRepository {
     }
 
     async get(userId: string,queryCartDto: QueryCartDto) :Promise<CartResDto> {
+        await this.generateWhenNotExists(userId)
         const {
             keyword,
             page,
@@ -69,9 +70,6 @@ export class CartsRepository {
             },
 
         })
-        if(!cart) {
-            throw new NotFoundException("Cart is not found");
-        }
         const pagination = new Pagination(page, limit,cart.cartsItems.length)
         return plainToInstance(CartResDto, {
             id: cart.id,
