@@ -4,6 +4,7 @@ import { UpdateFavoriteListDto } from './dto/update-favorite-list.dto';
 import { FavoriteListRepository } from './favorite-list.repository';
 import { FavoriteListResDto } from './dto/favorite-list-res.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
+import { QueryFavoriteListDto } from './dto/query-favorite-list.dto';
 
 @Injectable()
 export class FavoriteListService {
@@ -13,8 +14,8 @@ export class FavoriteListService {
     return this.favoriteListRepository.create(userId, createFavoriteListDto);
   }
 
-  findAll(): Promise<PaginatedResDto<FavoriteListResDto>> {
-    return this.favoriteListRepository.getMany();
+  findAll(queryFavoriteListDto: QueryFavoriteListDto): Promise<PaginatedResDto<FavoriteListResDto>> {
+    return this.favoriteListRepository.getMany(queryFavoriteListDto);
   }
 
   findOne(id: number) :Promise<FavoriteListResDto> {

@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, Query } from '@nestjs/common';
 import { FavoriteListService } from './favorite-list.service';
 import { CreateFavoriteListDto } from './dto/create-favorite-list.dto';
 import { UpdateFavoriteListDto } from './dto/update-favorite-list.dto';
 import { FavoriteListResDto } from './dto/favorite-list-res.dto';
 import { User } from 'src/decorator/user.decorator';
+import { QueryFavoriteListDto } from './dto/query-favorite-list.dto';
 
 @Controller('favorite-list')
 export class FavoriteListController {
@@ -15,8 +16,8 @@ export class FavoriteListController {
   }
 
   @Get()
-  findAll() {
-    return this.favoriteListService.findAll();
+  findAll(@Query() queryFavoriteListDto: QueryFavoriteListDto) {
+    return this.favoriteListService.findAll(queryFavoriteListDto);
   }
 
   @Get(':id')
