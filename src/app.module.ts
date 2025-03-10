@@ -1,3 +1,4 @@
+import { Favorite_list } from './../node_modules/.prisma/client/index.d';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './api/users/users.module';
@@ -19,6 +20,7 @@ import { OrdersModule } from './api/orders/orders.module';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
 import { MomoModule } from './api/momo/momo.module';
+import { FavoriteListModule } from './api/favorite-list/favorite-list.module';
 @Module({
   imports: [
     MomoModule,
@@ -37,6 +39,7 @@ import { MomoModule } from './api/momo/momo.module';
     CategoriesModule,
     UploadModule,
     CartsModule,
+    FavoriteListModule,
     BullModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
