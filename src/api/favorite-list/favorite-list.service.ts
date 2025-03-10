@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFavoriteListDto } from './dto/create-favorite-list.dto';
 import { UpdateFavoriteListDto } from './dto/update-favorite-list.dto';
+import { FavoriteListRepository } from './favorite-list.repository';
+import { FavoriteListResDto } from './dto/favorite-list-res.dto';
+import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 
 @Injectable()
 export class FavoriteListService {
-  create(createFavoriteListDto: CreateFavoriteListDto) {
-    return 'This action adds a new favoriteList';
+
+  constructor(private favoriteListRepository: FavoriteListRepository) {}
+  create(userId: string, createFavoriteListDto: CreateFavoriteListDto) :Promise<FavoriteListResDto> {
+    return this.favoriteListRepository.create(userId, createFavoriteListDto);
   }
 
-  findAll() {
-    return `This action returns all favoriteList`;
+  findAll(): Promise<PaginatedResDto<FavoriteListResDto>> {
+    return this.favoriteListRepository.getMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} favoriteList`;
+  findOne(id: number) :Promise<FavoriteListResDto> {
+    return this.favoriteListRepository.getOneById(id)
   }
 
-  update(id: number, updateFavoriteListDto: UpdateFavoriteListDto) {
-    return `This action updates a #${id} favoriteList`;
+  update(id: number, updateFavoriteListDto: UpdateFavoriteListDto):Promise<FavoriteListResDto> {
+    return this.favoriteListRepository.update(id, updateFavoriteListDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} favoriteList`;
+    return this.favoriteListRepository.remove(id)
   }
 }

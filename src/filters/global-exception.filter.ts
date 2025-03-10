@@ -14,7 +14,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         const res = ctx.getResponse<Response>();
         const req = ctx.getRequest<Request>();
         let error: ErrorDto;
-
+        console.error(exception)
         if (exception instanceof BadRequestException) {
             error = this.handleValidationError(exception);
         } else if (exception instanceof HttpException) {
