@@ -7,10 +7,17 @@ import { QueryOrderDto } from './dto/query-order.dto';
 import { PaginatedResDto } from 'src/common/dto/paginated-res.dto';
 import { OrderResDto } from './dto/order-res.dto';
 import { User } from 'src/decorator/user.decorator';
+import { StatsOrderDto } from './dto/stats-order.dto';
+import { StatsOrderResDto } from './dto/stats-order-res.dto';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
+
+  @Get('stats')
+  stats(@Query() statsOrderDto: StatsOrderDto) :Promise<StatsOrderResDto> {
+    return this.ordersService.stats(statsOrderDto)
+  }
 
   @Post()
   @ResponseMessage('Create order successfully')

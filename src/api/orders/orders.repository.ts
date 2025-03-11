@@ -11,6 +11,8 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { ProductsService } from '../products/products.service';
 import { ordersInclude } from 'src/prisma/include/orders-include';
 import { CartsService } from '../carts/carts.service';
+import { StatsOrderDto } from './dto/stats-order.dto';
+import { StatsOrderResDto } from './dto/stats-order-res.dto';
 
 
 
@@ -24,6 +26,37 @@ export class OrdersRepository {
         private cartsService: CartsService
     ) {}
     
+    async stats(statsOrderDto: StatsOrderDto) :Promise<StatsOrderResDto> {
+        const where: Record<string, unknown> = {};
+        if(statsOrderDto.getRangeDate()){
+            where.createdAt = statsOrderDto.getRangeDate()
+        }
+        const [totalOrders, totalRevenue, totalProductsSold, totalCustomer] = await Promise.all([
+            this.prismaService.orders.count({where}),
+            this.prismaService.orders_items.aggregate({
+                where,
+                _sum: {price: true, quantity: true},
+                
+            }).then(res => res._sum.price * res._sum.quantity),
+            this.prismaService.orders_items.aggregate({
+                where,
+                _sum: {quantity: true}
+            }).then(res => res._sum.quantity || 0),
+            this.prismaService.orders.findMany({ 
+                where, 
+                select: { userId: true } 
+            }).then(orders => new Set(orders.map(o => o.userId)).size) 
+        ])
+
+        return plainToInstance(StatsOrderResDto, {
+            totalOrders, 
+            totalRevenue, 
+            totalProductsSold, 
+            totalCustomer
+        })
+
+    }
+
     async create(userId: string, createDto: CreateOrderDto): Promise<OrderResDto> {
         const { status,address,phone,paymentMethod, items} = createDto;
         const user = await this.prismaService.users.findUnique({where: {id: userId}});
@@ -104,7 +137,8 @@ export class OrdersRepository {
                 where,
                 orderBy: {
                     [sortBy]: sortOrder
-                }
+                },
+                include: {...ordersInclude}
             }),
             this.getTotalDocument(where)
         ]) 

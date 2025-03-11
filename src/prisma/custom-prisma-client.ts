@@ -135,7 +135,6 @@ export function softDeleteExtension(prisma: PrismaClient) {
       },
       orders: {
         async findMany({args, query}) {
-          args.include = ordersInclude
           return query(args);
         },
         async findUnique({args, query}) {
