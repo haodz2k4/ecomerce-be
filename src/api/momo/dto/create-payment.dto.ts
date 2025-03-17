@@ -1,19 +1,8 @@
-import { Type } from "class-transformer";
-import { IsNumber, IsString, IsUrl } from "class-validator";
+import { OmitType } from "@nestjs/mapped-types";
+import { CreateOrderDto } from "src/api/orders/dto/create-order.dto";
 
 
-export class CreatePaymentDto {
+export class CreatePaymentDto extends OmitType(CreateOrderDto, ['status','paymentMethod']) {
 
-    @IsNumber()
-    @Type(() => Number)
-    amount: number;
-
-    @IsString()
-    orderId: string;
-
-    @IsString()
-    redirectUrl: string;
-
-    @IsString()
-    ipnUrl: string;
+    
 }

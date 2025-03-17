@@ -22,6 +22,11 @@ export class InventoriesRepository implements IRepository<InventoryResDto> {
         }});
         return plainToInstance(InventoryResDto, inventory);
     }
+    //total //quantity //
+    async stats() {
+
+    }
+
     async getMany(queryDto?: QueryInventoryDto): Promise<PaginatedResDto<InventoryResDto>> {
         
         const {

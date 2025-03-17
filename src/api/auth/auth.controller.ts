@@ -13,8 +13,6 @@ import { VerifyResDto } from './dto/verify-res.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { GoogleAuthGuard } from 'src/guards/google-auth.guard';
 import { Response } from 'express';
-import { UserResDto } from '../users/dto/user-res.dto';
-import { plainToInstance } from 'class-transformer';
 import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
@@ -61,7 +59,6 @@ export class AuthController {
 
     @Public()
     @Post('register')
-    @Post()
     @HttpCode(HttpStatus.OK)
     @ResponseMessage('Register successfully, please check your email')
     register(@Body() registerDto: RegisterDto):Promise<RegisterResDto> {
