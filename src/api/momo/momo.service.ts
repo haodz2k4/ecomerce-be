@@ -38,7 +38,7 @@ export class MomoService {
         const extraData = '';
 
         const ipnUrl = `${this.configService.get('URL_APP')}/api/v1/momo/notify`; 
-        const redirectUrl = `${this.configService.get('URL_APP')}/payment-success`; 
+        const redirectUrl = `${this.configService.get('CORS_ORIGIN')}/payment-success/${orderId}`; 
         console.log(redirectUrl)
         const rawSignature = 
             `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&ipnUrl=${ipnUrl}` +

@@ -3,9 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Queue } from 'bullmq';
 import { JobEnum } from 'src/constants/job.enum';
+import { IMailAdapter } from './mailer-adapter.module';
 
 @Injectable()
-export class MailService {
+export class MailService implements IMailAdapter {
 
     constructor(
         private configService: ConfigService,
@@ -26,7 +27,6 @@ export class MailService {
     }
 
     async sendOtp(to: string, fullName: string, otp: string) {
-        console.log(otp)
         await this.mailQueue.add(JobEnum.SEND_OTP,  {
             to,
             suject: 'FORGOT PASSWORD',
